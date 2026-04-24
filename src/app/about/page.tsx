@@ -3,7 +3,7 @@ import { Users, Target, Zap, Shield } from "lucide-react";
 import { SITE_NAME, SITE_TITLE, SITE_AUTHOR } from "@/lib/constant";
 
 export const metadata = {
-	title: `About ${SITE_NAME} - ${SITE_TITLE}`, - ${SITE_AUTHOR}
+	title: `About ${SITE_NAME} - ${SITE_TITLE}`,
 	description:
 		"We're on a mission to provide the most comprehensive collection of free online tools to boost productivity and simplify digital tasks.",
 };
