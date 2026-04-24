@@ -1,4 +1,4 @@
-export const SITE_URL = 'https://toolsprotech.com'
+export const SITE_URL = 'https://www.toolsprotech.com'
 export const SITE_NAME = 'ToolsProTech'
 export const SITE_TITLE = 'ToolsProTech - Free Online Tools By AB-Meraj'
 export const SITE_DESCRIPTION = 'Free online tools for various tasks without losing quality. ToolsProTech is the best tool for your needs.'
