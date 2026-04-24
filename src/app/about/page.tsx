@@ -1,6 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Users, Target, Zap, Shield } from "lucide-react";
-import { SITE_NAME, SITE_TITLE, SITE_AUTHOR } from "@/lib/constant";
+import { SITE_NAME, SITE_TITLE } from "@/lib/constant";
 
 export const metadata = {
 	title: `About ${SITE_NAME} - ${SITE_TITLE}`,
