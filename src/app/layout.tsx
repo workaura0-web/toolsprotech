@@ -67,6 +67,13 @@ export default function RootLayout({
 					src='https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7588044687720129'
 					crossOrigin='anonymous'
 				/>
+				{/* Publytics realtime tracking */}
+				<script
+					async={true}
+					src='https://publytics-rho.vercel.app/tracker.js'
+					data-site='Toolsprotech.com'
+					crossOrigin='anonymous'
+				/>
 			</head>
 			<body className={inter.className} suppressHydrationWarning>
 				<Header />
