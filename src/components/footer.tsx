@@ -155,7 +155,7 @@ const Footer = () => {
 						</div>
 					</div>
 					<p className='mt-4 text-center text-sm text-gray-400'>
-						Made with love by <span className='font-semibold text-blue-300'>ABM</span>
+						Made with <span className='text-red-400 text-base align-middle'>♥</span> by <span className='font-semibold text-blue-300'>ABM</span>
 					</p>
 				</div>
 			</div>
