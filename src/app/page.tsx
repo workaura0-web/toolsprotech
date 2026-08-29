@@ -471,6 +471,54 @@ export default function HomePage() {
 				</div>
 			</section>
 
+			<section className='py-12 px-4 bg-white'>
+				<div className='container mx-auto max-w-6xl'>
+					<div className='grid grid-cols-1 lg:grid-cols-3 gap-6'>
+						<div className='lg:col-span-2'>
+							<div className='rounded-2xl border border-slate-200 bg-slate-50 p-6 shadow-sm'>
+								<p className='text-sm font-semibold uppercase tracking-[0.2em] text-blue-600'>Why choose ToolsProTech?</p>
+								<h2 className='mt-4 text-3xl font-bold text-slate-900'>Everything you need in one free toolkit</h2>
+								<p className='mt-4 text-base leading-7 text-slate-600'>
+									ToolsProTech helps you work faster with practical online utilities for SEO,
+									content creation, productivity, PDF tasks, and everyday digital work. All tools are
+									built to be simple, fast, and easy to use on desktop, tablet, and mobile.
+								</p>
+								<p className='mt-3 text-base leading-7 text-slate-600'>
+									Whether you need a password generator, image resizer, word counter, domain checker,
+									or calculator, our platform gives you quick results without unnecessary sign-up steps.
+								</p>
+							</div>
+						</div>
+						<div className='grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-1 gap-4'>
+							{[
+								{ label: 'Free to use', value: '100%' },
+								{ label: 'Tool categories', value: '7+' },
+								{ label: 'Works on all devices', value: 'Mobile' },
+							].map((item) => (
+								<div key={item.label} className='rounded-2xl border border-blue-100 bg-blue-50 p-5 text-center shadow-sm'>
+									<div className='text-2xl font-bold text-blue-700'>{item.value}</div>
+									<div className='mt-2 text-sm font-medium text-slate-600'>{item.label}</div>
+								</div>
+							))}
+						</div>
+					</div>
+
+					<div className='mt-10 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4'>
+						{[
+							{ title: 'SEO tools', text: 'Check domains, keywords, metadata, and search-related tasks faster.' },
+							{ title: 'Text tools', text: 'Format, compare, rewrite, and analyze text with simple tools.' },
+							{ title: 'Image & PDF tools', text: 'Compress, resize, convert, and merge files without complex setup.' },
+							{ title: 'Calculators', text: 'Use smart calculators for finance, health, productivity, and daily tasks.' },
+							].map((item) => (
+							<div key={item.title} className='rounded-2xl border border-slate-200 bg-white p-5 shadow-sm'>
+								<h3 className='text-lg font-semibold text-slate-800'>{item.title}</h3>
+								<p className='mt-2 text-sm leading-6 text-slate-600'>{item.text}</p>
+							</div>
+						))}
+					</div>
+				</div>
+			</section>
+
 			{/* Tools Section with Sidebar */}
 			<section className='py-8 px-4'>
 				<div className='container mx-auto'>

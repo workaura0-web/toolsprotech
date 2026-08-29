@@ -92,8 +92,14 @@ const Footer = () => {
 								</Link>
 							</li>
 							<li>
-								<Link
-									href='/contact'
+								<Link									href='/blog'
+									className='hover:text-blue-400 transition-colors flex items-center'>
+										<FileText className='w-4 h-4 mr-2' />
+										Blog & Guides
+									</Link>
+							</li>
+							<li>
+								<Link									href='/contact'
 									className='hover:text-blue-400 transition-colors flex items-center'>
 									<User className='w-4 h-4 mr-2' />
 									Contact
@@ -136,7 +142,7 @@ const Footer = () => {
 									Disclaimer
 								</Link>
 							</li>
-					</ul>
+						</ul>
 					</div>
 				</div>
 				<div className='border-t border-gray-700 mt-12 pt-8 text-center text-gray-400'>

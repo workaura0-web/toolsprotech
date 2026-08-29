@@ -44,35 +44,9 @@ export default function RootLayout({
 	return (
 		<html lang='en' suppressHydrationWarning>
 			<head suppressHydrationWarning>
-
-				{/* google analytics code */}
-				<script
-					async
-					src='https://www.googletagmanager.com/gtag/js?id=XXXXXXXXXXXX'
-				/>
-				<script
-					dangerouslySetInnerHTML={{
-						__html: `
-						window.dataLayer = window.dataLayer || [];
-						function gtag(){dataLayer.push(arguments);}
-						gtag('js', new Date());
-						gtag('config', 'XXXXXXXXXXXX');
-					`,
-					}}
-				/>
-
-				{/* Google AdSense Code */}
-				<script
-					async
-					src='https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7588044687720129'
-					crossOrigin='anonymous'
-				/>
-				{/* Publytics realtime tracking */}
-				<script
-					async={true}
-					src='https://publytics-rho.vercel.app/tracker.js'
-					data-site='Toolsprotech.com'
-					crossOrigin='anonymous'
+				<meta
+					name='viewport'
+					content='width=device-width, initial-scale=1, maximum-scale=5'
 				/>
 			</head>
 			<body className={inter.className} suppressHydrationWarning>
