@@ -154,6 +154,9 @@ const Footer = () => {
 							<Link href='/disclaimer' className='mx-3 hover:text-blue-400 transition-colors text-sm'>Disclaimer</Link>
 						</div>
 					</div>
+					<p className='mt-4 text-center text-sm text-gray-400'>
+						Made with love by <span className='font-semibold text-blue-300'>ABM</span>
+					</p>
 				</div>
 			</div>
 		</footer>

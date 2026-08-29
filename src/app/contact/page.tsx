@@ -1,7 +1,7 @@
 import type React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Mail, Clock, MapPin, MessageCircleMore } from "lucide-react";
-import { SITE_EMAIL, SITE_NAME, SITE_PHONE } from "@/lib/constant";
+import { Mail, Clock, MapPin, MessageCircle } from "lucide-react";
+import { SITE_EMAIL, SITE_NAME } from "@/lib/constant";
 
 export const metadata = {
 	title: `Contact Us - ${SITE_NAME}`,
@@ -37,13 +37,6 @@ export default function ContactPage() {
 									<div>
 										<p className='font-medium'>Email</p>
 										<p className='text-gray-600 break-all'>{SITE_EMAIL}</p>
-									</div>
-								</div>
-								<div className='flex items-start gap-3'>
-									<MessageCircleMore className='w-5 h-5 text-green-600 mt-1' />
-									<div>
-										<p className='font-medium'>WhatsApp</p>
-										<p className='text-gray-600'>{03253229649
 									</div>
 								</div>
 								<div className='flex items-start gap-3'>
@@ -85,6 +78,16 @@ export default function ContactPage() {
 					</Card>
 				</div>
 			</div>
+
+			<a
+				href='https://wa.me/923253229649?text=Hello%20ToolsProTech%2C%20I%20need%20help.'
+				target='_blank'
+				rel='noreferrer'
+				className='fixed bottom-5 right-5 z-50 inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-green-500 to-emerald-500 px-4 py-2.5 text-sm font-semibold text-white shadow-lg shadow-green-500/30 transition-transform duration-200 hover:scale-105 hover:shadow-xl focus:outline-none focus:ring-4 focus:ring-green-200'
+				aria-label='Chat on WhatsApp'>
+				<MessageCircle className='h-4 w-4' />
+				<span>WhatsApp</span>
+			</a>
 		</div>
 	);
 }
