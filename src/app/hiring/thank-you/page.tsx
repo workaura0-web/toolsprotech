@@ -1,5 +1,4 @@
-"use client";
-
+import type { Metadata } from "next";
 import type React from "react";
 import {
 	Card,
@@ -10,6 +9,11 @@ import {
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { CheckCircle, Mail, Clock } from "lucide-react";
+
+export const metadata: Metadata = {
+	title: "Application Received | ToolsProTech",
+	robots: { index: false, follow: false },
+};
 
 export default function ThankYouPage() {
 	return (

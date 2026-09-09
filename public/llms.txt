@@ -1,0 +1,22 @@
+# ToolsProTech
+
+ToolsProTech is a free online utility website for SEO, calculators, text, image, PDF, developer, and productivity tasks.
+
+## Important pages
+
+- Homepage: https://toolsprotech.com/
+- Tools directory: https://toolsprotech.com/tools
+- Blog and guides: https://toolsprotech.com/blog
+- About: https://toolsprotech.com/about
+- Contact: https://toolsprotech.com/contact
+- Privacy policy: https://toolsprotech.com/privacy
+- Terms: https://toolsprotech.com/terms
+- Disclaimer: https://toolsprotech.com/disclaimer
+
+## Content guidance
+
+Tool pages explain the purpose of each utility, provide usage steps, practical use cases, limitations, FAQs, and links to related tools. Blog articles provide educational guidance about online tools, SEO, productivity, and website quality.
+
+## Trust and privacy
+
+Visitors should review the privacy policy and disclaimer before using tools for sensitive or important decisions. Results are provided as practical assistance and should be verified against an appropriate primary or professional source where necessary.

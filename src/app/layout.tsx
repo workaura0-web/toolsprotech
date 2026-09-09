@@ -6,6 +6,7 @@ import Header from "@/components/header";
 import Footer from "@/components/footer";
 import { Toaster } from "sonner";
 import { SITE_AUTHOR, SITE_DESCRIPTION, SITE_NAME, SITE_TITLE, SITE_URL } from "@/lib/constant";
+import SiteStructuredData from "@/components/site-structured-data";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -13,10 +14,11 @@ export const metadata: Metadata = {
 	title: SITE_TITLE,
 	description: SITE_DESCRIPTION,
 	keywords:
-		"online tools, free tools, SEO tools, calculators, generators, text tools, image tools, developer tools, password generator, QR code generator, smmgarden, smmgarden.com, smmgarden.in",
+		"free online tools, SEO tools, calculators, text tools, image tools, PDF tools, developer tools",
 	authors: [{ name: SITE_AUTHOR }],
 	creator: SITE_AUTHOR,
 	publisher: SITE_AUTHOR,
+	metadataBase: new URL(SITE_URL),
 	robots: "index, follow",
 	openGraph: {
 		type: "website",
@@ -50,6 +52,7 @@ export default function RootLayout({
 				/>
 			</head>
 			<body className={inter.className} suppressHydrationWarning>
+				<SiteStructuredData />
 				<Header />
 				{children}
 				<Toaster />
