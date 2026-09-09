@@ -116,11 +116,17 @@ export default function ToolGuide() {
 	};
 
 	useEffect(() => {
-		document.title = `${detail.title} | ToolsProTech`;
-		const description = document.querySelector('meta[name="description"]');
-		if (description) {
-			description.setAttribute("content", detail.intro);
-		}
+		const syncMetadata = () => {
+			document.title = `${detail.title} | ToolsProTech`;
+			const description = document.querySelector('meta[name="description"]');
+			if (description) {
+				description.setAttribute("content", detail.intro);
+			}
+		};
+
+		syncMetadata();
+		const timer = window.setTimeout(syncMetadata, 0);
+		return () => window.clearTimeout(timer);
 	}, [detail.intro, detail.title]);
 
 	if (!slug || pathname === "/tools") return null;
