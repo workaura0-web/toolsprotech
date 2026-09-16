@@ -418,7 +418,7 @@ export default function HomePage() {
 						Free Online Tools
 					</h1>
 					<p className='text-xl text-blue-100 mb-10 max-w-3xl mx-auto'>
-						65+ powerful tools to boost your productivity. All free,
+						50+ powerful tools to boost your productivity. All free,
 						no registration required.
 					</p>
 
@@ -716,7 +716,7 @@ export default function HomePage() {
 													Total Tools
 												</span>
 												<span className='font-bold text-blue-600'>
-													65+
+																50+
 												</span>
 											</div>
 											<div className='flex justify-between'>
