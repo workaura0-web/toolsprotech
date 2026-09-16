@@ -32,9 +32,8 @@ function titleFromSlug(slug: string) {
 }
 
 export async function generateMetadata(): Promise<Metadata> {
-	const pathname = (await headers()).get("x-toolsprotech-pathname") ?? "/tools";
-	const segments = pathname.split("/").filter(Boolean);
-	const slug = segments[0] === "tools" && segments.length === 2 ? segments[1] : null;
+	const requestHeaders = await headers();
+	const slug = requestHeaders.get("x-toolsprotech-tool-slug") || null;
 
 	if (!slug) {
 		return {

@@ -16,7 +16,12 @@ type ToolDetail = {
 	keywords?: string[];
 };
 
-export type PublicToolDetail = ToolDetail;
+type ResolvedToolDetail = Omit<ToolDetail, "whatItDoes" | "inputs" | "output" | "keywords"> & {
+	whatItDoes: string;
+	inputs: string;
+	output: string;
+	keywords: string[];
+};
 
 const toolDetails: Record<string, ToolDetail> = {
 	"age-calculator": { title: "Age Calculator", intro: "Calculate a person's exact age between two dates, including years, months, days, and useful time totals.", bestFor: "birthdays, forms, personal records, and date planning", category: "calculator" },
@@ -93,7 +98,7 @@ const categoryAdvice: Record<string, string> = {
 	developer: "Developer output should be checked against the format and version required by your project. Use sample or non-sensitive data while testing, and validate the result in the application that will consume it.",
 };
 
-const faqTemplates: Record<string, Array<{ question: string; answer: (detail: ToolDetail) => string }>> = {
+const faqTemplates: Record<string, Array<{ question: string; answer: (detail: ResolvedToolDetail) => string }>> = {
 	calculator: [
 		{ question: "How accurate is the result?", answer: (detail) => `${detail.title} calculates from the values you provide. It is useful for a quick estimate, but confirm assumptions, rounding, units, and any current rates before making an important decision.` },
 		{ question: "Which inputs should I check first?", answer: (detail) => `Check the ${detail.inputs.toLowerCase()} and make sure every value uses the expected format. A small unit, date, or decimal error can change the ${detail.output.toLowerCase()} significantly.` },
@@ -120,7 +125,7 @@ const faqTemplates: Record<string, Array<{ question: string; answer: (detail: To
 	],
 };
 
-function getToolDetail(slug: string): ToolDetail {
+function getToolDetail(slug: string): ResolvedToolDetail {
 	const detail = toolDetails[slug] ?? {
 		title: titleFromSlug(slug),
 		intro: `Use this free ${titleFromSlug(slug).toLowerCase()} to complete a focused digital task quickly and understand the result before you use it.`,
