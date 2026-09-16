@@ -4,8 +4,7 @@ import { SITE_EMAIL, SITE_NAME } from "@/lib/constant";
 
 export const metadata = {
 	title: `Privacy Policy - ${SITE_NAME}`,
-	description:
-		"Your privacy is our priority. Learn how we protect your data on ${SITE_NAME}.",
+	description: `Your privacy is our priority. Learn how we protect your data on ${SITE_NAME}.`,
 };
 
 export default function PrivacyPage() {

@@ -4,8 +4,7 @@ import { SITE_EMAIL, SITE_NAME } from "@/lib/constant";
 
 export const metadata = {
 	title: `Disclaimer - ${SITE_NAME}`,
-	description:
-		"Important information about the use of our tools and services on ${SITE_NAME}.",
+	description: `Important information about the use of our tools and services on ${SITE_NAME}.`,
 };
 
 export default function DisclaimerPage() {

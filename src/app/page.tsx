@@ -729,18 +729,18 @@ export default function HomePage() {
 											</div>
 											<div className='flex justify-between'>
 												<span className='text-gray-600'>
-													Users This Month
+													Registration
 												</span>
 												<span className='font-bold text-green-600'>
-													10K+
+													Not required
 												</span>
 											</div>
 											<div className='flex justify-between'>
 												<span className='text-gray-600'>
-													Tools Used Today
+													Processing
 												</span>
 												<span className='font-bold text-orange-600'>
-													2.5K+
+													Browser-based
 												</span>
 											</div>
 										</div>
