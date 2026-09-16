@@ -44,10 +44,25 @@ export async function generateMetadata(): Promise<Metadata> {
 	}
 
 	const title = titleFromSlug(slug);
+	const description = `Use the free ${title.toLowerCase()} from ToolsProTech. Learn what it does, how to use it, practical benefits, limitations, and answers to common questions.`;
+	const url = `https://toolsprotech.com/tools/${slug}`;
 	return {
 		title: `${title} | ToolsProTech`,
-		description: `Use the free ${title.toLowerCase()} from ToolsProTech. Learn how it works, follow the usage steps, and review practical answers before using the result.`,
-		alternates: { canonical: `https://toolsprotech.com/tools/${slug}` },
+		description,
+		keywords: [title, `free ${title.toLowerCase()}`, `${title} online`, "ToolsProTech"],
+		alternates: { canonical: url },
+		openGraph: {
+			type: "website",
+			url,
+			title: `${title} | ToolsProTech`,
+			description,
+			siteName: "ToolsProTech",
+		},
+		twitter: {
+			card: "summary",
+			title: `${title} | ToolsProTech`,
+			description,
+		},
 	};
 }
 

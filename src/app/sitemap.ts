@@ -18,23 +18,24 @@ const toolSlugs = [
 
 export default function sitemap(): MetadataRoute.Sitemap {
 	const staticRoutes = ["", "/about", "/blog", "/contact", "/terms", "/privacy", "/disclaimer", "/cookies", "/hiring", "/tools"];
+	const lastModified = new Date();
 
 	return [
 		...staticRoutes.map((route) => ({
 			url: `${SITE_URL}${route}`,
-			lastModified: new Date(),
+			lastModified,
 			changeFrequency: route === "/blog" ? "weekly" as const : "monthly" as const,
 			priority: route === "" ? 1 : route === "/tools" || route === "/blog" ? 0.9 : 0.5,
 		})),
 		...toolSlugs.map((slug) => ({
 			url: `${SITE_URL}/tools/${slug}`,
-			lastModified: new Date(),
+			lastModified,
 			changeFrequency: "monthly" as const,
 			priority: 0.7,
 		})),
 		...blogPosts.map((post) => ({
 			url: `${SITE_URL}/blog/${post.slug}`,
-			lastModified: new Date(),
+			lastModified,
 			changeFrequency: "monthly" as const,
 			priority: 0.8,
 		})),

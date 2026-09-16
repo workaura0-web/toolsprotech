@@ -3,13 +3,20 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect } from "react";
+import { SITE_URL } from "@/lib/constant";
 
 type ToolDetail = {
 	title: string;
 	intro: string;
 	bestFor: string;
 	category: string;
+	whatItDoes?: string;
+	inputs?: string;
+	output?: string;
+	keywords?: string[];
 };
+
+export type PublicToolDetail = ToolDetail;
 
 const toolDetails: Record<string, ToolDetail> = {
 	"age-calculator": { title: "Age Calculator", intro: "Calculate a person's exact age between two dates, including years, months, days, and useful time totals.", bestFor: "birthdays, forms, personal records, and date planning", category: "calculator" },
@@ -75,6 +82,61 @@ const relatedTools: Record<string, string[]> = {
 	developer: ["json-formatter", "base64", "uuid-generator"],
 };
 
+const categoryAdvice: Record<string, string> = {
+	calculator: "For calculations, use clear units and realistic values. A result is an estimate when it depends on assumptions such as rates, dates, or standard ranges, so check the inputs before using it in a financial, academic, or health decision.",
+	seo: "SEO results are signals rather than guarantees. Use this tool alongside useful original content, accurate page structure, good internal links, and information from the official documentation for the platform you are working with.",
+	text: "Text results are starting points for editing. Read the complete output, preserve the intended meaning, and check spelling, citations, names, and formatting before publishing or submitting the work.",
+	image: "Image conversion always involves a trade-off between file size, dimensions, format, transparency, and visual quality. Keep an original copy and inspect the downloaded result before replacing a production asset.",
+	pdf: "PDF workflows work best when files are readable, not password-protected, and within the browser's available memory. Keep the original documents and confirm the final file opens correctly before sharing it.",
+	generator: "Generated output should be reviewed and customized. Treat it as a practical starting point rather than a finished legal, marketing, design, or communication document.",
+	security: "Do not paste passwords, private keys, or other secrets into a service unless you understand how they are handled. Prefer local browser processing and use a trusted password manager for important credentials.",
+	developer: "Developer output should be checked against the format and version required by your project. Use sample or non-sensitive data while testing, and validate the result in the application that will consume it.",
+};
+
+const faqTemplates: Record<string, Array<{ question: string; answer: (detail: ToolDetail) => string }>> = {
+	calculator: [
+		{ question: "How accurate is the result?", answer: (detail) => `${detail.title} calculates from the values you provide. It is useful for a quick estimate, but confirm assumptions, rounding, units, and any current rates before making an important decision.` },
+		{ question: "Which inputs should I check first?", answer: (detail) => `Check the ${detail.inputs.toLowerCase()} and make sure every value uses the expected format. A small unit, date, or decimal error can change the ${detail.output.toLowerCase()} significantly.` },
+	],
+	seo: [
+		{ question: "Does this tool guarantee better rankings?", answer: (detail) => `No. ${detail.title} provides useful analysis or a starting output, but rankings also depend on helpful content, technical accessibility, competition, links, and search-engine systems.` },
+		{ question: "What should I do after using it?", answer: (detail) => `Review the ${detail.output.toLowerCase()}, apply only changes that accurately describe your page, and test the result with your website and the relevant official webmaster guidance.` },
+	],
+	text: [
+		{ question: "Is the output ready to publish?", answer: (detail) => `Treat the ${detail.output.toLowerCase()} as an editing aid. Read it carefully, restore your intended voice, and verify facts, originality, and citations before publishing.` },
+		{ question: "What kind of input works best?", answer: (detail) => `Use clear ${detail.inputs.toLowerCase()} and remove accidental formatting or unrelated text. A focused input makes the result easier to review and more relevant to your goal.` },
+	],
+	image: [
+		{ question: "Will the converted image look exactly the same?", answer: (detail) => `That depends on the format and quality settings. Review the ${detail.output.toLowerCase()} at its intended display size and keep the original file as a backup.` },
+		{ question: "Is my image uploaded to a server?", answer: () => "This browser tool is designed to process supported files locally where possible. Do not use it for confidential media unless the page clearly explains the handling of your file." },
+	],
+	pdf: [
+		{ question: "What files should I prepare?", answer: (detail) => `Use readable PDF files that are not corrupted or locked against the requested operation. Check the ${detail.inputs.toLowerCase()} before starting and keep a copy of the originals.` },
+		{ question: "How do I verify the result?", answer: (detail) => `Open the ${detail.output.toLowerCase()} in a PDF viewer, inspect page order and text, and confirm that forms, links, and images still work before sending it to someone else.` },
+	],
+	default: [
+		{ question: "What is the best way to use this tool?", answer: (detail) => `Start with a small, representative ${detail.inputs.toLowerCase()}, run ${detail.title.toLowerCase()}, and review the ${detail.output.toLowerCase()} before using it in your workflow.` },
+		{ question: "Should I customize the result?", answer: (detail) => `Yes. The ${detail.output.toLowerCase()} is intended to save time, but you should adapt it to your audience, project requirements, and any rules that apply to your use case.` },
+	],
+};
+
+function getToolDetail(slug: string): ToolDetail {
+	const detail = toolDetails[slug] ?? {
+		title: titleFromSlug(slug),
+		intro: `Use this free ${titleFromSlug(slug).toLowerCase()} to complete a focused digital task quickly and understand the result before you use it.`,
+		bestFor: "everyday digital work, study, and small business tasks",
+		category: "tool",
+	};
+
+	return {
+		...detail,
+		whatItDoes: detail.whatItDoes ?? detail.intro,
+		inputs: detail.inputs ?? "the information requested by the tool",
+		output: detail.output ?? "a result you can review and use",
+		keywords: detail.keywords ?? [detail.title.toLowerCase(), "free online tool", "how to use"],
+	};
+}
+
 function titleFromSlug(slug: string) {
 	return slug
 		.split("-")
@@ -86,13 +148,11 @@ export default function ToolGuide() {
 	const pathname = usePathname();
 	const slug = pathname.split("/").filter(Boolean).at(-1);
 	const activeSlug = slug ?? "tool";
-	const detail = toolDetails[activeSlug] ?? {
-		title: titleFromSlug(activeSlug),
-		intro: `Use this free ${titleFromSlug(activeSlug).toLowerCase()} to complete a focused digital task quickly and understand the result before you use it.`,
-		bestFor: "everyday digital work, study, and small business tasks",
-		category: "tool",
-	};
+	const detail = getToolDetail(activeSlug);
 	const links = relatedTools[detail.category] ?? ["word-counter", "password-generator", "json-formatter"];
+	const faqs = faqTemplates[detail.category] ?? faqTemplates.default;
+	const advice = categoryAdvice[detail.category] ?? categoryAdvice.generator;
+	const pageUrl = `${SITE_URL}/tools/${activeSlug}`;
 	const faqSchema = {
 		"@context": "https://schema.org",
 		"@type": "FAQPage",
@@ -102,16 +162,34 @@ export default function ToolGuide() {
 				name: "Is this tool free to use?",
 				acceptedAnswer: { "@type": "Answer", text: "Yes. You can use the tool without creating an account. Avoid entering confidential information unless the page explains how it is handled." },
 			},
-			{
+			...faqs.map((faq) => ({
 				"@type": "Question",
-				name: "Can I rely on the result for an important decision?",
-				acceptedAnswer: { "@type": "Answer", text: "Use the output as practical assistance and verify important results against an appropriate official, professional, or primary source." },
-			},
-			{
-				"@type": "Question",
-				name: "What should I do if the result looks wrong?",
-				acceptedAnswer: { "@type": "Answer", text: "Check the input format, units, dates, and options first. Run the tool again with a simple test value, then contact us if the problem continues." },
-			},
+				name: faq.question,
+				acceptedAnswer: { "@type": "Answer", text: faq.answer(detail) },
+			})),
+		],
+	};
+	const applicationSchema = {
+		"@context": "https://schema.org",
+		"@type": "WebApplication",
+		"@id": `${pageUrl}#application`,
+		name: detail.title,
+		url: pageUrl,
+		description: detail.intro,
+		applicationCategory: "UtilitiesApplication",
+		operatingSystem: "Any",
+		browserRequirements: "Requires JavaScript",
+		isAccessibleForFree: true,
+		inLanguage: "en",
+		publisher: { "@type": "Organization", name: "ToolsProTech", url: SITE_URL },
+	};
+	const breadcrumbSchema = {
+		"@context": "https://schema.org",
+		"@type": "BreadcrumbList",
+		itemListElement: [
+			{ "@type": "ListItem", position: 1, name: "Home", item: SITE_URL },
+			{ "@type": "ListItem", position: 2, name: "Tools", item: `${SITE_URL}/tools` },
+			{ "@type": "ListItem", position: 3, name: detail.title, item: pageUrl },
 		],
 	};
 
@@ -135,6 +213,8 @@ export default function ToolGuide() {
 		<section className='border-t bg-slate-50/70 px-4 py-12' aria-labelledby='tool-guide-heading'>
 			<div className='mx-auto max-w-4xl space-y-8'>
 				<script type='application/ld+json' dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
+				<script type='application/ld+json' dangerouslySetInnerHTML={{ __html: JSON.stringify(applicationSchema) }} />
+				<script type='application/ld+json' dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
 				<div className='space-y-3'>
 					<p className='text-sm font-semibold uppercase tracking-wide text-blue-700'>
 						{detail.category} guide
@@ -143,7 +223,32 @@ export default function ToolGuide() {
 						{detail.title}: how it works and when to use it
 					</h2>
 					<p className='max-w-3xl leading-7 text-slate-600'>{detail.intro}</p>
+					<p className='max-w-3xl leading-7 text-slate-600'>Searches for {detail.keywords?.join(", ")} often begin with a clear explanation and a dependable result. This guide explains what the tool does, how to prepare your input, and how to review the output responsibly.</p>
 				</div>
+
+				<article className='space-y-5 leading-7 text-slate-700'>
+					<h3 className='text-xl font-semibold text-slate-900'>What is {detail.title}?</h3>
+					<p>{detail.whatItDoes} ToolsProTech keeps the main task visible so you can work through it without an account or unnecessary navigation. The page is intended for {detail.bestFor}; it can help with a quick check, a first draft, routine formatting, or a small task that would otherwise take several manual steps.</p>
+					<p>A useful result depends on a useful input. Before running {detail.title.toLowerCase()}, decide what you need to accomplish and check that {detail.inputs?.toLowerCase()} is complete. Remove accidental spaces, confirm dates and units, and use a representative example when you are testing. This makes the {detail.output?.toLowerCase()} easier to understand and reduces avoidable mistakes.</p>
+					<p>{advice} When a result affects money, health, legal documents, security, or a published website, use this tool as assistance and verify the final decision with the relevant primary source or qualified professional.</p>
+
+					<h3 className='text-xl font-semibold text-slate-900'>How to use {detail.title}</h3>
+					<p>Start by reading the labels and any examples shown in the tool. Enter only the information needed for the task, choose the correct options, and run the action once. Then compare the result with what you expected. If it looks unusual, test a simple known value before assuming that the tool or your original data is wrong.</p>
+					<p>After the first run, review the complete {detail.output?.toLowerCase()}. Copy or download it only after checking the important details. For generated text, edit the wording so it sounds like you. For files, open the downloaded file and inspect it. For SEO or developer output, validate the format in the system where it will be used. Keeping the original input or file also gives you a reliable way to repeat the task later.</p>
+
+					<h3 className='text-xl font-semibold text-slate-900'>Benefits and practical use cases</h3>
+					<ul className='list-disc space-y-2 pl-5'>
+						<li>Reduces repetitive work by putting a focused task in one browser page.</li>
+						<li>Helps students, creators, developers, publishers, and small businesses get a quick starting result.</li>
+						<li>Makes inputs and outputs visible so you can review them instead of relying on an unexplained result.</li>
+						<li>Works well as part of a wider workflow that includes checking, editing, and saving the final version.</li>
+					</ul>
+					<p>The best use case is a task with a clear objective. For example, you might use {detail.title.toLowerCase()} before preparing a document, publishing a page, debugging a response, organizing a file, or comparing options. The tool can save time, but the quality of the outcome still depends on the accuracy of your input and the care you take during review.</p>
+
+					<h3 className='text-xl font-semibold text-slate-900'>Limitations and responsible use</h3>
+					<p>No online utility can understand every context. Results may depend on browser support, file size, external data, rounding, format rules, or the assumptions described on the page. Do not treat a generated document as legal advice, a calculator as professional advice, or an SEO signal as a ranking promise. Never enter confidential information unless you have confirmed that the workflow is appropriate for it.</p>
+					<p>For the most dependable workflow, keep an original copy, verify the result in its final destination, and contact ToolsProTech if you find a reproducible problem. This approach gives you the convenience of a free online tool while keeping the important judgment with you.</p>
+				</article>
 
 				<div className='grid gap-6 md:grid-cols-2'>
 					<article className='rounded-lg border bg-white p-6'>
@@ -166,14 +271,12 @@ export default function ToolGuide() {
 						<summary className='cursor-pointer font-medium text-slate-900'>Is this tool free to use?</summary>
 						<p className='mt-3 leading-7 text-slate-600'>Yes. You can use the tool without creating an account. Avoid entering confidential information unless the page specifically explains how it is handled.</p>
 					</details>
-					<details className='rounded-lg border bg-white p-4'>
-						<summary className='cursor-pointer font-medium text-slate-900'>Can I rely on the result for an important decision?</summary>
-						<p className='mt-3 leading-7 text-slate-600'>Use the output as practical assistance and verify important results against an appropriate official, professional, or primary source. Calculators and generators can simplify work but do not replace expert advice.</p>
-					</details>
-					<details className='rounded-lg border bg-white p-4'>
-						<summary className='cursor-pointer font-medium text-slate-900'>What should I do if the result looks wrong?</summary>
-						<p className='mt-3 leading-7 text-slate-600'>Check the input format, units, dates, and options first. Run the tool again with a simple test value, then contact us if the problem continues.</p>
-					</details>
+					{faqs.map((faq) => (
+						<details key={faq.question} className='rounded-lg border bg-white p-4'>
+							<summary className='cursor-pointer font-medium text-slate-900'>{faq.question}</summary>
+							<p className='mt-3 leading-7 text-slate-600'>{faq.answer(detail)}</p>
+						</details>
+					))}
 				</div>
 
 				<nav aria-label='Related tools' className='border-t pt-6'>
@@ -186,6 +289,15 @@ export default function ToolGuide() {
 						))}
 					</div>
 				</nav>
+
+				<div className='border-t pt-6'>
+					<h3 className='mb-3 text-lg font-semibold text-slate-900'>Share this tool</h3>
+					<div className='flex flex-wrap gap-4 text-sm font-medium'>
+						<a href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(pageUrl)}`} target='_blank' rel='noreferrer' className='text-blue-700 underline underline-offset-4'>Facebook</a>
+						<a href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(pageUrl)}&text=${encodeURIComponent(detail.title)}`} target='_blank' rel='noreferrer' className='text-blue-700 underline underline-offset-4'>X</a>
+						<a href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(pageUrl)}`} target='_blank' rel='noreferrer' className='text-blue-700 underline underline-offset-4'>LinkedIn</a>
+					</div>
+				</div>
 			</div>
 		</section>
 	);
