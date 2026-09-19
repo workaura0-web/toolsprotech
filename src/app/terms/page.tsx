@@ -20,7 +20,6 @@ export default function TermsPage() {
 					</h1>
 					<p className='text-xl text-gray-600'>
 						Please read these terms carefully before using our services on {SITE_NAME}.
-						services.
 					</p>
 				</div>
 
@@ -60,7 +59,7 @@ export default function TermsPage() {
 						</CardHeader>
 						<CardContent className='prose prose-gray max-w-none'>
 							<p className='text-gray-600 mb-4'>
-								Permission is granted to temporarily use ToolBox
+								Permission is granted to temporarily use {SITE_NAME}
 								Pro for personal and commercial purposes. This
 								is the grant of a license, not a transfer of
 								title, and under this license you may not:
@@ -129,7 +128,7 @@ export default function TermsPage() {
 							</CardHeader>
 							<CardContent>	
 								<p className='text-gray-600 mb-3'>
-									In no event shall ToolBox Pro or its
+									In no event shall {SITE_NAME} or its
 									suppliers be liable for any damages
 									including:
 								</p>

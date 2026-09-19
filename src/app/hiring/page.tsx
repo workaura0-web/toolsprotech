@@ -1,7 +1,6 @@
 "use client";
 
 import type React from "react";
-import Head from "next/head";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import {
@@ -60,9 +59,6 @@ export default function HiringPage() {
 		}));
 	};
 
-	const apiKey = "06dca582-c4d4-40f1-a3af-194beb5c2200";
-	const formId = "46122254";
-
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
 		setLoading(true);
@@ -80,15 +76,7 @@ export default function HiringPage() {
 				],
 			};
 
-			const response = await axios.post(
-				`https://api.hsforms.com/submissions/v3/integration/submit/${formId}/${apiKey}`,
-				data,
-				{
-					headers: {
-						"Content-Type": "application/json",
-					},
-				}
-			);
+			const response = await axios.post("/api/hiring", data);
 
 			if (response.status === 200 || response.status === 204) {
 				// Redirect to thank you page
@@ -108,39 +96,6 @@ export default function HiringPage() {
 
 	return (
 		<>
-			<Head>
-				<title>Telecaller Jobs - Join Our Team | SMM Garden</title>
-				<meta
-					name='description'
-					content='Exciting telecaller job opportunity for experienced professionals. 2+ years experience required. Competitive salary, remote work options. Apply now!'
-				/>
-				<meta
-					name='keywords'
-					content='telecaller jobs, telecalling jobs, customer service jobs, sales jobs, remote jobs, telecaller careers'
-				/>
-				<meta
-					property='og:title'
-					content='Telecaller Jobs - Join Our Team | SMM Garden'
-				/>
-				<meta
-					property='og:description'
-					content='Exciting telecaller job opportunity for experienced professionals. 2+ years experience required. Competitive salary, remote work options.'
-				/>
-				<meta property='og:type' content='website' />
-				<meta
-					property='og:url'
-					content='https://www.smmgarden.com/hiring'
-				/>
-				<meta name='twitter:card' content='summary_large_image' />
-				<meta
-					name='twitter:title'
-					content='Telecaller Jobs - Join Our Team | SMM Garden'
-				/>
-				<meta
-					name='twitter:description'
-					content='Exciting telecaller job opportunity for experienced professionals. 2+ years experience required. Competitive salary, remote work options.'
-				/>
-			</Head>
 			<div className='min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100'>
 				{/* Hero Section */}
 				<div className='bg-gradient-to-r from-blue-600 to-indigo-700 text-white py-16'>

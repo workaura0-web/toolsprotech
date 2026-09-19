@@ -95,6 +95,17 @@ export default function CookiesPage() {
 									</ul>
 								</div>
 
+								<div className='border-l-4 border-amber-500 pl-4'>
+									<h3 className='font-semibold text-gray-800 mb-2'>
+										Advertising Cookies
+									</h3>
+									<p className='text-gray-600 text-sm'>
+										Google AdSense may use cookies and similar technologies to
+										measure ads and provide relevant advertising. Availability and
+										personalization depend on your region and consent choices.
+									</p>
+								</div>
+
 								<div className='border-l-4 border-purple-500 pl-4'>
 									<h3 className='font-semibold text-gray-800 mb-2'>
 										Preference Cookies

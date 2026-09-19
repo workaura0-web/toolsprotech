@@ -67,6 +67,25 @@ export default function PrivacyPage() {
 
 					<Card className='shadow-xl border-0'>
 						<CardHeader>
+							<CardTitle>Advertising and Google AdSense</CardTitle>
+						</CardHeader>
+						<CardContent className='prose prose-gray max-w-none'>
+							<p className='text-gray-600 mb-4'>
+								We may display advertisements through Google AdSense. Google and
+								its partners may use cookies or similar technologies to show and
+								measure relevant ads, subject to your choices and applicable law.
+							</p>
+							<p className='text-gray-600'>
+								You can learn more about how Google uses information from sites
+								that use its services in Google&apos;s advertising and privacy
+								policies. Where required, we request consent before using
+								non-essential advertising cookies.
+							</p>
+						</CardContent>
+					</Card>
+
+					<Card className='shadow-xl border-0'>
+						<CardHeader>
 							<CardTitle className='flex items-center gap-2'>
 								<Database className='w-5 h-5 text-green-600' />
 								How We Use Your Information
@@ -158,7 +177,7 @@ export default function PrivacyPage() {
 									</li>
 									<li>• Analytics cookies (anonymous)</li>
 									<li>
-										• No advertising or tracking cookies
+										• Advertising cookies may be used by Google AdSense
 									</li>
 									<li>
 										• You can disable cookies in your
