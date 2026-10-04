@@ -1,6 +1,5 @@
 import type React from "react";
 import type { Metadata } from "next";
-import Script from "next/script";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/header";
@@ -63,12 +62,6 @@ export default function RootLayout({
 				/>
 			</head>
 			<body className={inter.className} suppressHydrationWarning>
-				<Script
-					async
-					src='https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6193096344573365'
-					crossOrigin='anonymous'
-					strategy='afterInteractive'
-				/>
 				<SiteStructuredData />
 				<Header />
 				{children}
