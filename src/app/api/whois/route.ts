@@ -23,23 +23,6 @@ interface WhoisXmlApiResponse {
 	technical?: { email?: string };
 	[key: string]: unknown;
 }
-interface IpApiResponse {
-	ip?: string;
-	country_code?: string;
-	country_name?: string;
-	[key: string]: unknown;
-}
-interface DNSAnswer {
-	name: string;
-	type: number;
-	TTL: number;
-	data: string;
-}
-interface DNSResponse {
-	Status: number;
-	Answer?: DNSAnswer[];
-}
-
 type DomainData = Record<string, unknown> & {
 	creation_date?: string;
 	update_date?: string;
@@ -107,11 +90,6 @@ export async function GET(request: NextRequest) {
 				timeout: 3000,
 				name: "whoisxmlapi.com",
 			},
-			{
-				url: `https://api.ipapi.com/${domain}?access_key=2119b2e037fe5f867dbeef865e4830fb`,
-				timeout: 3000,
-				name: "ipapi.com",
-			},
 		];
 
 		let domainData: DomainData | null = null;
@@ -174,24 +152,6 @@ export async function GET(request: NextRequest) {
 						};
 						break;
 					}
-				} else if (config.name === "ipapi.com") {
-					const data: IpApiResponse = await response.json();
-					if (data.ip || data.country_code) {
-						domainData = {
-							creation_date: new Date(
-								Date.now() - 365 * 24 * 60 * 60 * 1000
-							)
-								.toISOString()
-								.split("T")[0],
-							update_date: new Date().toISOString().split("T")[0],
-							registrar: "Unknown",
-							status: "Active",
-							name_servers: [`ns1.${domain}`, `ns2.${domain}`],
-							registrant_country: data.country_name || "Unknown",
-							whois_server: "ipapi.com",
-						};
-						break;
-					}
 				}
 			} catch (err) {
 				lastError =
@@ -201,70 +161,16 @@ export async function GET(request: NextRequest) {
 			}
 		}
 
-		// If no WHOIS data, try DNS lookup and return estimated data
-		if (!domainData) {
-			try {
-				// Try multiple DNS lookups
-				const dnsTypes = ["A", "NS", "MX"];
-				const dnsResults: Record<string, DNSResponse> = {};
-
-				for (const type of dnsTypes) {
-					try {
-						const dnsResponse = await fetch(
-							`https://dns.google/resolve?name=${domain}&type=${type}`,
-							{ signal: AbortSignal.timeout(2000) }
-						);
-						const dnsData: DNSResponse = await dnsResponse.json();
-						dnsResults[type] = dnsData;
-					} catch (dnsErr) {
-						console.warn(`DNS ${type} lookup failed:`, dnsErr);
-					}
-				}
-
-				if (dnsResults.A?.Status === 0 && dnsResults.A?.Answer) {
-					// Domain exists, create estimated data
-					const currentDate = new Date().toISOString().split("T")[0];
-					const estimatedRegistrationDate = new Date(
-						Date.now() - 365 * 24 * 60 * 60 * 1000
-					)
-						.toISOString()
-						.split("T")[0];
-
-					// Extract name servers from DNS if available
-					const nameServers = dnsResults.NS?.Answer?.map(
-						(ns: DNSAnswer) => ns.data
-					) || [`ns1.${domain}`, `ns2.${domain}`];
-
-					domainData = {
-						creation_date: estimatedRegistrationDate,
-						update_date: currentDate,
-						registrar: "Unknown",
-						status: "Active",
-						name_servers: nameServers,
-						registrant_country: "Unknown",
-						whois_server: "dns-fallback",
-						note: "Data estimated from DNS lookup - WHOIS information unavailable",
-					};
-				} else {
-					throw new Error("Domain not found or not accessible");
-				}
-			} catch (dnsErr: unknown) {
-				throw new Error(
-					`Failed to retrieve domain information: ${
-						lastError ||
-						(dnsErr instanceof Error
-							? dnsErr.message
-							: "Unknown error")
-					}`
-				);
-			}
+		if (!domainData || typeof domainData.creation_date !== "string") {
+			throw new Error(
+				lastError
+					? `WHOIS registration data is unavailable: ${lastError}`
+					: "WHOIS registration data is unavailable for this domain."
+			);
 		}
 
 		// Parse and format the domain data
-		const registrationDate =
-			typeof domainData.creation_date === "string"
-				? domainData.creation_date
-				: new Date().toISOString().split("T")[0];
+		const registrationDate = domainData.creation_date;
 		const expirationDate =
 			typeof domainData.expiration_date === "string"
 				? domainData.expiration_date
@@ -272,32 +178,30 @@ export async function GET(request: NextRequest) {
 				? domainData.expires
 				: typeof domainData.expirationDate === "string"
 				? domainData.expirationDate
-				: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000)
-						.toISOString()
-						.split("T")[0];
+				: null;
 		const registrar =
 			domainData.registrar || domainData.registrar_name || "Unknown";
 		const status =
-			domainData.status || domainData.domain_status || "Active";
+			domainData.status || domainData.domain_status || "Unknown";
 		const nameServers = domainData.name_servers ||
-			domainData.nameservers || [`ns1.${domain}`, `ns2.${domain}`];
+			domainData.nameservers || [];
 		const lastUpdated =
 			typeof domainData.last_updated === "string"
 				? domainData.last_updated
 				: typeof domainData.update_date === "string"
 				? domainData.update_date
-				: new Date().toISOString().split("T")[0];
+				: null;
 
 		const result = {
 			domain,
 			registrationDate: registrationDate.split("T")[0],
-			expirationDate: expirationDate.split("T")[0],
+			expirationDate: expirationDate?.split("T")[0] ?? null,
 			registrar,
 			status: Array.isArray(status) ? status[0] : status,
 			nameServers: Array.isArray(nameServers)
 				? nameServers
 				: [nameServers],
-			lastUpdated: lastUpdated.split("T")[0],
+			lastUpdated: lastUpdated?.split("T")[0] ?? null,
 			whoisServer: domainData.whois_server,
 			domainStatus: Array.isArray(status) ? status : [status],
 			registrantOrganization:

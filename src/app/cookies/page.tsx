@@ -41,9 +41,10 @@ export default function CookiesPage() {
 								useful to you.
 							</p>
 							<p className='text-gray-600'>
-								{SITE_NAME} uses cookies responsibly and
-								minimally to enhance your experience while
-								respecting your privacy.
+								This site loads Google&apos;s advertising script. Google
+								may use cookies or similar technologies when its
+								advertising services are active. Cookie behavior can
+								depend on your browser, region, and Google settings.
 							</p>
 						</CardContent>
 					</Card>
@@ -59,19 +60,14 @@ export default function CookiesPage() {
 							<div className='space-y-6'>
 								<div className='border-l-4 border-blue-500 pl-4'>
 									<h3 className='font-semibold text-gray-800 mb-2'>
-										Essential Cookies
+										Site functionality
 									</h3>
-									<p className='text-gray-600 text-sm mb-2'>
-										These cookies are necessary for the
-										website to function properly. They
-										enable basic functions like page
-										navigation and access to secure areas.
+									<p className='text-gray-600 text-sm'>
+										The site does not currently use a separate
+										first-party preference or analytics cookie
+										system. Browser storage used by an individual
+										tool, if any, is described on that tool page.
 									</p>
-									<ul className='text-gray-600 text-sm space-y-1'>
-										<li>• Session management</li>
-										<li>• Security features</li>
-										<li>• Basic functionality</li>
-									</ul>
 								</div>
 
 								<div className='border-l-4 border-green-500 pl-4'>
@@ -99,31 +95,14 @@ export default function CookiesPage() {
 									<h3 className='font-semibold text-gray-800 mb-2'>
 										Advertising Cookies
 									</h3>
-									<p className='text-gray-600 text-sm'>
-										Google AdSense may use cookies and similar technologies to
-										measure ads and provide relevant advertising. Availability and
-										personalization depend on your region and consent choices.
+										<p className='text-gray-600 text-sm'>
+											Google&apos;s advertising script is loaded on the site.
+											Google may use cookies or similar technologies to
+											provide and measure advertising, subject to its
+											policies and available user settings.
 									</p>
 								</div>
 
-								<div className='border-l-4 border-purple-500 pl-4'>
-									<h3 className='font-semibold text-gray-800 mb-2'>
-										Preference Cookies
-									</h3>
-									<p className='text-gray-600 text-sm mb-2'>
-										These cookies remember your preferences
-										and settings to provide a more
-										personalized experience.
-									</p>
-									<ul className='text-gray-600 text-sm space-y-1'>
-										<li>
-											• Theme preferences (dark/light
-											mode)
-										</li>
-										<li>• Language settings</li>
-										<li>• Tool configurations</li>
-									</ul>
-								</div>
 							</div>
 						</CardContent>
 					</Card>
@@ -138,26 +117,19 @@ export default function CookiesPage() {
 							</CardHeader>
 							<CardContent>
 								<p className='text-gray-600 mb-3'>
-									We use minimal third-party services that may
-									set cookies:
+									Google&apos;s advertising services may use cookies
+									and similar technologies when active:
 								</p>
 								<ul className='text-gray-600 space-y-2 text-sm'>
-									<li>
-										<strong>Google Analytics:</strong> For
-										anonymous usage statistics
-									</li>
-									<li>
-										<strong>CDN Services:</strong> For
-										faster content delivery
-									</li>
-									<li>
-										<strong>Security Services:</strong> For
-										protection against threats
-									</li>
+										<li>
+											<strong>Google AdSense:</strong> Advertising
+											and measurement, subject to Google&apos;s
+											policies and settings
+										</li>
 								</ul>
 								<p className='text-gray-600 text-sm mt-3'>
-									We carefully vet all third-party services to
-									ensure they meet our privacy standards.
+									Please review Google&apos;s privacy information for
+									its data handling and available controls.
 								</p>
 							</CardContent>
 						</Card>
@@ -189,8 +161,9 @@ export default function CookiesPage() {
 									</li>
 								</ul>
 								<p className='text-gray-600 text-sm mt-3'>
-									Note: Disabling essential cookies may affect
-									website functionality.
+									Google&apos;s ad personalization controls are managed
+									through Google where available. The site does not
+									currently provide its own cookie preference panel.
 								</p>
 							</CardContent>
 						</Card>
@@ -201,35 +174,12 @@ export default function CookiesPage() {
 							<CardTitle>Cookie Retention</CardTitle>
 						</CardHeader>
 						<CardContent className='prose prose-gray max-w-none'>
-							<p className='text-gray-600 mb-4'>
-								Different cookies have different lifespans:
-							</p>
-							<div className='grid grid-cols-1 md:grid-cols-3 gap-4'>
-								<div className='bg-blue-50 p-4 rounded-lg'>
-									<h4 className='font-semibold text-blue-800 mb-2'>
-										Session Cookies
-									</h4>
-									<p className='text-blue-700 text-sm'>
-										Deleted when you close your browser
+									<p className='text-gray-600 mb-4'>
+										Cookie types and retention periods are determined
+										by the service that sets them and by your browser
+										settings. We do not set fixed expiry periods for
+										Google advertising cookies.
 									</p>
-								</div>
-								<div className='bg-green-50 p-4 rounded-lg'>
-									<h4 className='font-semibold text-green-800 mb-2'>
-										Short-term Cookies
-									</h4>
-									<p className='text-green-700 text-sm'>
-										Expire within 30 days
-									</p>
-								</div>
-								<div className='bg-purple-50 p-4 rounded-lg'>
-									<h4 className='font-semibold text-purple-800 mb-2'>
-										Long-term Cookies
-									</h4>
-									<p className='text-purple-700 text-sm'>
-										Expire within 2 years (preferences only)
-									</p>
-								</div>
-							</div>
 						</CardContent>
 					</Card>
 
@@ -251,7 +201,7 @@ export default function CookiesPage() {
 									Inquiry
 								</p>
 								<p>
-									<strong>Last Updated:</strong> Jan 2026
+									<strong>Last Updated:</strong> October 2026
 								</p>
 							</div>
 						</CardContent>

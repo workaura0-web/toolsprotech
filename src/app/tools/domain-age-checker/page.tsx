@@ -26,12 +26,12 @@ import { toast } from "sonner";
 interface DomainInfo {
 	domain: string;
 	registrationDate: string;
-	expirationDate: string;
+	expirationDate: string | null;
 	age: string;
 	registrar: string;
 	status: string;
 	nameServers: string[];
-	lastUpdated: string;
+	lastUpdated: string | null;
 	whoisServer?: string;
 	domainStatus?: string[];
 	registrantOrganization?: string;
@@ -179,7 +179,9 @@ export default function DomainAgeChecker() {
 		}
 	};
 
-	const formatDate = (dateString: string): string => {
+	const formatDate = (dateString: string | null): string => {
+		if (!dateString) return "Not available";
+
 		return new Date(dateString).toLocaleDateString("en-US", {
 			year: "numeric",
 			month: "long",
@@ -187,7 +189,9 @@ export default function DomainAgeChecker() {
 		});
 	};
 
-	const getDaysUntilExpiration = (expirationDate: string): number => {
+	const getDaysUntilExpiration = (expirationDate: string | null): number | null => {
+		if (!expirationDate) return null;
+
 		const expDate = new Date(expirationDate);
 		const now = new Date();
 		const diffTime = expDate.getTime() - now.getTime();
@@ -362,12 +366,11 @@ export default function DomainAgeChecker() {
 															domainInfo.expirationDate
 														)}
 													</p>
-													<p className='text-sm text-gray-500'>
-														{getDaysUntilExpiration(
-															domainInfo.expirationDate
-														)}{" "}
-														days remaining
-													</p>
+													{domainInfo.expirationDate && (
+														<p className='text-sm text-gray-500'>
+															{getDaysUntilExpiration(domainInfo.expirationDate)} days remaining
+														</p>
+													)}
 												</div>
 												<div>
 													<Label className='text-sm font-medium text-gray-500'>

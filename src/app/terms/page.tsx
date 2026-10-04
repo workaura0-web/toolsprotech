@@ -60,7 +60,7 @@ export default function TermsPage() {
 						<CardContent className='prose prose-gray max-w-none'>
 							<p className='text-gray-600 mb-4'>
 								Permission is granted to temporarily use {SITE_NAME}
-								Pro for personal and commercial purposes. This
+								for personal and commercial purposes. This
 								is the grant of a license, not a transfer of
 								title, and under this license you may not:
 							</p>

@@ -34,21 +34,20 @@ export default function PrivacyPage() {
 						</CardHeader>
 						<CardContent className='prose prose-gray max-w-none'>
 							<p className='text-gray-600 mb-4'>
-								{SITE_NAME} is designed with privacy in mind. We
-								collect minimal information to provide our
-								services:
+								Information handled depends on the tool you use. Many
+								text, image, PDF, and calculator tools process input in
+								your browser. Domain, IP, WordPress, and currency
+								lookups send the submitted domain, URL, IP address, or
+								currency details to a ToolsProTech server route so it
+								can return a result.
 							</p>
 							<ul className='text-gray-600 space-y-2'>
 								<li>
-									<strong>Usage Analytics:</strong> We collect
-									anonymous usage statistics to improve our
-									tools and user experience.
-								</li>
-								<li>
-									<strong>Technical Data:</strong> Basic
-									technical information like browser type,
-									device type, and IP address for security and
-									optimization purposes.
+									<strong>Lookup requests:</strong> The requested
+									domain, URL, IP address, currency pair, and amount
+									may be included in a request to our server. The
+									server may query third-party data providers to
+									complete domain, network, or exchange-rate lookups.
 								</li>
 								<li>
 									<strong>Contact Information:</strong> When
@@ -57,10 +56,10 @@ export default function PrivacyPage() {
 								</li>
 							</ul>
 							<p className='text-gray-600 mt-4'>
-								<strong>Important:</strong> We do NOT collect,
-								store, or process any data you input into our
-								tools. All tool processing happens locally in
-								your browser.
+								Do not submit passwords, private keys, or other
+								confidential information. Lookup providers and our
+								hosting infrastructure may process request data under
+								their own terms and retention practices.
 							</p>
 						</CardContent>
 					</Card>
@@ -76,10 +75,13 @@ export default function PrivacyPage() {
 								measure relevant ads, subject to your choices and applicable law.
 							</p>
 							<p className='text-gray-600'>
-								You can learn more about how Google uses information from sites
-								that use its services in Google&apos;s advertising and privacy
-								policies. Where required, we request consent before using
-								non-essential advertising cookies.
+								Google&apos;s advertising script is loaded on the site.
+								When Google services are used, Google and its partners
+								may process device, browser, IP, cookie, and ad interaction
+								information under Google&apos;s policies and your settings.
+								The site does not currently provide its own cookie
+								preference control. Use Google&apos;s available ad and
+								privacy settings to manage personalization.
 							</p>
 						</CardContent>
 					</Card>
@@ -93,19 +95,12 @@ export default function PrivacyPage() {
 						</CardHeader>
 						<CardContent className='prose prose-gray max-w-none'>
 							<p className='text-gray-600 mb-4'>
-								The limited information we collect is used
-								solely for:
+								Information described above is used to:
 							</p>
 							<ul className='text-gray-600 space-y-2'>
 								<li>Improving our tools and user experience</li>
-								<li>
-									Analyzing usage patterns to identify popular
-									tools and features
-								</li>
-								<li>
-									Ensuring the security and stability of our
-									platform
-								</li>
+								<li>Return results for requested lookups</li>
+								<li>Operate and protect the website</li>
 								<li>
 									Responding to your inquiries and support
 									requests
@@ -129,32 +124,24 @@ export default function PrivacyPage() {
 						</CardHeader>
 						<CardContent className='prose prose-gray max-w-none'>
 							<p className='text-gray-600 mb-4'>
-								We implement industry-standard security measures
-								to protect your information:
+								Use HTTPS when accessing the site. Browser-based
+								processing and server-based lookups work differently:
+								lookups require sending the requested details to our
+								server and may involve an external provider.
 							</p>
 							<ul className='text-gray-600 space-y-2'>
 								<li>
-									<strong>Encryption:</strong> All data
-									transmission is encrypted using HTTPS/TLS
+									<strong>Connection:</strong> Site requests use
+									HTTPS when served over the secure site address.
 								</li>
 								<li>
-									<strong>Local Processing:</strong> Tool data
-									is processed entirely in your browser
+									<strong>Tool inputs:</strong> Many tools run in
+									your browser; lookup tools send required values
+									to server routes.
 								</li>
 								<li>
-									<strong>No Data Storage:</strong> We
-									don&apos;t store any content you input into
-									our tools
-								</li>
-								<li>
-									<strong>Regular Security Audits:</strong> We
-									regularly review and update our security
-									practices
-								</li>
-								<li>
-									<strong>Access Controls:</strong> Limited
-									access to any collected data with strict
-									authentication
+									<strong>Third parties:</strong> Lookup providers
+									may receive query data needed to return results.
 								</li>
 							</ul>
 						</CardContent>
@@ -167,18 +154,14 @@ export default function PrivacyPage() {
 							</CardHeader>
 							<CardContent>
 								<p className='text-gray-600 mb-3'>
-									We use minimal cookies and tracking
-									technologies:
+									The site loads Google&apos;s advertising script. Google
+									may use cookies or similar technologies when its
+									services are active. We do not currently operate a
+									separate analytics product or first-party preference
+									cookie system.
 								</p>
 								<ul className='text-gray-600 space-y-1 text-sm'>
-									<li>
-										• Essential cookies for basic
-										functionality
-									</li>
-									<li>• Analytics cookies (anonymous)</li>
-									<li>
-										• Advertising cookies may be used by Google AdSense
-									</li>
+									<li>• Google advertising cookies and similar technologies</li>
 									<li>
 										• You can disable cookies in your
 										browser
@@ -198,7 +181,7 @@ export default function PrivacyPage() {
 								<ul className='text-gray-600 space-y-1 text-sm'>
 									<li>• Access your personal information</li>
 									<li>• Request deletion of your data</li>
-									<li>• Opt-out of analytics tracking</li>
+									<li>• Manage ad personalization in Google&apos;s settings</li>
 									<li>• Contact us about privacy concerns</li>
 								</ul>
 							</CardContent>
@@ -219,7 +202,7 @@ export default function PrivacyPage() {
 									<strong>Email:</strong> {SITE_EMAIL}
 								</p>
 								<p>
-									<strong>Last Updated:</strong> Jan 2026
+									<strong>Last Updated:</strong> October 2026
 								</p>
 							</div>
 						</CardContent>

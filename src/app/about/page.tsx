@@ -17,9 +17,8 @@ export default function AboutPage() {
 						About {SITE_NAME}
 					</h1>
 					<p className='text-xl text-gray-600 max-w-2xl mx-auto'>
-						We&apos;re on a mission to provide the most
-						comprehensive collection of free online tools to boost
-						productivity and simplify digital tasks.
+						ToolsProTech brings together browser utilities for common
+						SEO, text, calculation, image, PDF, and developer tasks.
 					</p>
 				</div>
 
@@ -31,10 +30,9 @@ export default function AboutPage() {
 						</CardHeader>
 						<CardContent>
 							<p className='text-gray-600'>
-								To democratize access to powerful digital tools
-								by providing a comprehensive, free platform that
-								empowers users to accomplish their tasks
-								efficiently and securely.
+								Our goal is to make everyday digital tasks easier to
+								complete by keeping each utility focused, accessible,
+								and free to use.
 							</p>
 						</CardContent>
 					</Card>
@@ -46,10 +44,9 @@ export default function AboutPage() {
 						</CardHeader>
 						<CardContent>
 							<p className='text-gray-600'>
-								We&apos;re a passionate team of developers,
-								designers, and digital enthusiasts committed to
-								creating tools that make a real difference in
-								people&apos;s daily workflows.
+								ToolsProTech is maintained by its site owner. Tool
+								pages describe what each utility does, the information
+								it uses, and limitations visitors should keep in mind.
 							</p>
 						</CardContent>
 					</Card>
@@ -80,8 +77,9 @@ export default function AboutPage() {
 								Privacy First
 							</h3>
 							<p className='text-gray-600'>
-								Your data is processed locally in your browser.
-								We never store or share your information.
+								Many tools run in your browser. Domain, IP, and
+								currency lookups send the requested details to our
+								server and, where needed, external data providers.
 							</p>
 						</div>
 						<div className='text-center'>
@@ -106,27 +104,21 @@ export default function AboutPage() {
 					<CardContent>
 						<div className='prose prose-gray max-w-none'>
 							<p className='text-gray-600 mb-4'>
-								{SITE_NAME} was born out of frustration with
-								scattered, unreliable online tools. As
-								developers and content creators ourselves, we
-								found ourselves constantly searching for
-								reliable tools to help with everyday tasks -
-								from generating secure passwords to optimizing
-								content for SEO.
+								{SITE_NAME} is a collection of focused utilities for
+								common tasks such as formatting text, converting
+								files, checking public domain information, and
+								performing calculations.
 							</p>
 							<p className='text-gray-600 mb-4'>
-								We realized there was a need for a centralized
-								platform that offered high-quality, fast, and
-								secure tools without the hassle of ads,
-								registration requirements, or privacy concerns.
-								That&apos;s when {SITE_NAME} was created.
+								Some utilities process information in the browser;
+								others rely on server routes or external data
+								providers. The Privacy Policy explains these
+								differences and what information is involved.
 							</p>
 							<p className='text-gray-600'>
-								Today, we&apos;re proud to serve thousands of
-								users worldwide with our growing collection of
-								50+ tools, and we&apos;re constantly working to
-								add new features and improve existing ones based
-								on user feedback and emerging needs.
+								The site includes tools across several categories.
+								If you find an issue or have a suggestion, please
+								use the Contact page so it can be reviewed.
 							</p>
 						</div>
 					</CardContent>
