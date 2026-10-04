@@ -59,6 +59,24 @@ export default function WordCounter() {
           <p className="text-gray-600">Count words, characters, sentences, and more in your text</p>
         </div>
 
+        <div className="mb-8 rounded-2xl border border-orange-200 bg-orange-50 p-5 shadow-sm">
+          <h2 className="text-xl font-semibold text-orange-900 mb-3">Why use this tool</h2>
+          <div className="grid gap-4 md:grid-cols-3">
+            <div className="rounded-xl bg-white p-4">
+              <p className="text-sm font-semibold text-orange-800 mb-1">What it does</p>
+              <p className="text-sm text-slate-600">Measures text length and structure so you can track writing goals, assignment limits, and content length quickly.</p>
+            </div>
+            <div className="rounded-xl bg-white p-4">
+              <p className="text-sm font-semibold text-orange-800 mb-1">Who should use it</p>
+              <p className="text-sm text-slate-600">Great for students, content writers, marketers, editors, and anyone preparing written work or marketing copy.</p>
+            </div>
+            <div className="rounded-xl bg-white p-4">
+              <p className="text-sm font-semibold text-orange-800 mb-1">Limitations</p>
+              <p className="text-sm text-slate-600">It gives accurate counting, but quality still depends on how well the text is written and structured.</p>
+            </div>
+          </div>
+        </div>
+
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Text Input */}
           <div className="lg:col-span-2">

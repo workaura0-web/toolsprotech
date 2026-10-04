@@ -85,6 +85,24 @@ export default function PasswordGenerator() {
 					</p>
 				</div>
 
+				<div className='mb-8 rounded-2xl border border-purple-200 bg-purple-50 p-5 shadow-sm'>
+					<h2 className='text-xl font-semibold text-purple-900 mb-3'>Why use this tool</h2>
+					<div className='grid gap-4 md:grid-cols-3'>
+						<div className='rounded-xl bg-white p-4'>
+							<p className='text-sm font-semibold text-purple-800 mb-1'>What it does</p>
+							<p className='text-sm text-slate-600'>Creates strong random passwords using selected character types and custom length for safer account protection.</p>
+						</div>
+						<div className='rounded-xl bg-white p-4'>
+							<p className='text-sm font-semibold text-purple-800 mb-1'>Who should use it</p>
+							<p className='text-sm text-slate-600'>Best for account owners, teams, developers, and anyone creating login credentials that need stronger protection.</p>
+						</div>
+						<div className='rounded-xl bg-white p-4'>
+							<p className='text-sm font-semibold text-purple-800 mb-1'>Limitations</p>
+							<p className='text-sm text-slate-600'>The tool creates strong passwords, but you must store and manage them safely to avoid security issues.</p>
+						</div>
+					</div>
+				</div>
+
 				<Card className='shadow-xl border-0'>
 					<CardHeader>
 						<CardTitle>Generate Password</CardTitle>

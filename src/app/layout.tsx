@@ -14,6 +14,7 @@ import {
 	SITE_URL,
 } from "@/lib/constant";
 import SiteStructuredData from "@/components/site-structured-data";
+import CookieConsent from "@/components/cookie-consent";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -73,6 +74,7 @@ export default function RootLayout({
 				{children}
 				<Toaster />
 				<Footer />
+				<CookieConsent />
 			</body>
 		</html>
 	);

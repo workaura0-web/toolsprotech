@@ -120,6 +120,24 @@ export default function QRGenerator() {
 					</p>
 				</div>
 
+				<div className='mb-8 rounded-2xl border border-purple-200 bg-purple-50 p-5 shadow-sm'>
+					<h2 className='text-xl font-semibold text-purple-900 mb-3'>Why use this tool</h2>
+					<div className='grid gap-4 md:grid-cols-3'>
+						<div className='rounded-xl bg-white p-4'>
+							<p className='text-sm font-semibold text-purple-800 mb-1'>What it does</p>
+							<p className='text-sm text-slate-600'>Creates scannable codes for website links, contact information, Wi-Fi access, and quick content sharing.</p>
+						</div>
+						<div className='rounded-xl bg-white p-4'>
+							<p className='text-sm font-semibold text-purple-800 mb-1'>Who should use it</p>
+							<p className='text-sm text-slate-600'>Helpful for small businesses, event planners, marketers, educators, and anyone sharing links faster.</p>
+						</div>
+						<div className='rounded-xl bg-white p-4'>
+							<p className='text-sm font-semibold text-purple-800 mb-1'>Limitations</p>
+							<p className='text-sm text-slate-600'>The final QR output depends on the content you enter and the quality of the final image export.</p>
+						</div>
+					</div>
+				</div>
+
 				<div className='grid grid-cols-1 lg:grid-cols-2 gap-8'>
 					{/* Input Section */}
 					<Card className='shadow-xl border-0'>

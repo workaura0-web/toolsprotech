@@ -211,6 +211,24 @@ export default function DomainAgeChecker() {
 					</p>
 				</div>
 
+				<div className='mb-8 rounded-2xl border border-blue-200 bg-blue-50 p-5 shadow-sm'>
+					<h2 className='text-xl font-semibold text-blue-900 mb-3'>Why use this tool</h2>
+					<div className='grid gap-4 md:grid-cols-3'>
+						<div className='rounded-xl bg-white p-4'>
+							<p className='text-sm font-semibold text-blue-800 mb-1'>What it does</p>
+							<p className='text-sm text-slate-600'>Looks up public domain registration details to estimate how long a website has been active and whether its registration records are visible.</p>
+						</div>
+						<div className='rounded-xl bg-white p-4'>
+							<p className='text-sm font-semibold text-blue-800 mb-1'>Who should use it</p>
+							<p className='text-sm text-slate-600'>Useful for SEO researchers, buyers, marketers, and anyone evaluating a website before outreach, purchase, or partnership.</p>
+						</div>
+						<div className='rounded-xl bg-white p-4'>
+							<p className='text-sm font-semibold text-blue-800 mb-1'>Limitations</p>
+							<p className='text-sm text-slate-600'>Some domain records are protected or hidden, so registration dates may be unavailable even when the site is live.</p>
+						</div>
+					</div>
+				</div>
+
 				<div className='grid grid-cols-1 lg:grid-cols-3 gap-8'>
 					{/* Input Section */}
 					<div className='lg:col-span-1'>

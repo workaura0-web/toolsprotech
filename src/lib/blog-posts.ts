@@ -257,6 +257,161 @@ export const blogPosts: BlogPost[] = [
       },
     ],
   },
+  {
+    slug: 'how-to-check-domain-authority',
+    title: 'How to Check Domain Authority',
+    description: 'Learn what domain authority means, how to evaluate it, and how to use the right tools to understand a website’s strength.',
+    category: 'SEO',
+    readTime: '5 min read',
+    publishedAt: 'October 2026',
+    content: [
+      {
+        heading: 'What domain authority really tells you',
+        text: [
+          'Domain authority is a comparative score that estimates how likely a website is to rank in search results compared with other domains. It is useful for benchmarking, but it is not the same as a direct SEO ranking metric from Google.',
+          'This makes it useful for comparing websites, checking competitors, and measuring whether a domain has grown in visibility over time.',
+        ],
+      },
+      {
+        heading: 'How to use it in practice',
+        text: [
+          'If you are buying a domain, reviewing a partner site, or tracking a competitor, domain authority can help you understand the overall trust and link profile that supports ranking performance.',
+          'Use it as a directional metric, not as a single source of truth. Pair it with on-page quality, content relevance, and backlink quality before making decisions.',
+        ],
+      },
+      {
+        heading: 'What to watch out for',
+        text: [
+          'Domain authority can change based on backlink profile and website activity, so it is best used as part of a broader SEO review. A new site may have a low score even when its content is strong and improving.',
+          'That is why tools should be used to guide decisions, not replace a deeper review of actual content value and technical quality.',
+        ],
+      },
+    ],
+  },
+  {
+    slug: 'best-seo-tools-for-website-owners',
+    title: 'Best SEO Tools for Website Owners',
+    description: 'A practical list of tools that help website owners improve metadata, readability, technical health, and search performance without confusion.',
+    category: 'SEO',
+    readTime: '6 min read',
+    publishedAt: 'October 2026',
+    content: [
+      {
+        heading: 'Focus on the tasks that matter most',
+        text: [
+          'Website owners usually need help with title tags, meta descriptions, keyword balance, technical checks, and page structure. A few strong tools can cover most of that work very effectively.',
+          'The best SEO toolkit is not the largest one. It is the one that fits your workflow and gives clear, actionable information.',
+        ],
+      },
+      {
+        heading: 'What a useful toolkit includes',
+        text: [
+          'Look for support with keyword research, content optimization, technical site review, and link or authority analysis. This combination helps owners improve both ranking signals and user experience.',
+          'The more clearly a tool explains what it measures and how to act on the result, the more useful it becomes in daily work.',
+        ],
+      },
+      {
+        heading: 'Keep it realistic',
+        text: [
+          'No single SEO tool can replace good content strategy, proper site structure, and faster pages. The best results come from combining useful tools with informed decisions about user intent and content quality.',
+          'This balance is what makes SEO sustainable over time instead of dependent on quick tricks or shallow optimization.',
+        ],
+      },
+    ],
+  },
+  {
+    slug: 'how-to-use-a-keyword-density-checker',
+    title: 'How to Use a Keyword Density Checker',
+    description: 'Understand how keyword density helps content analysis and how to avoid over-optimization while improving relevance and readability.',
+    category: 'SEO',
+    readTime: '4 min read',
+    publishedAt: 'October 2026',
+    content: [
+      {
+        heading: 'Why keyword density matters',
+        text: [
+          'A keyword density checker shows how often a word or phrase appears in a page relative to the total text. This helps writers see whether a target keyword is relevant and naturally placed.',
+          'It is useful for content review, but it should not be treated as a ranking formula by itself.',
+        ],
+      },
+      {
+        heading: 'Use it as a guide, not a rule',
+        text: [
+          'A page with too little keyword repetition may not clearly match the topic. A page with too much repetition may feel unnatural and less readable. A healthy range supports both search relevance and quality for readers.',
+          'The best approach is to improve content clarity first and then use keyword analysis to spot gaps or overuse.',
+        ],
+      },
+      {
+        heading: 'A practical workflow',
+        text: [
+          'Start with your topic, write a clear page, and then run the keyword density checker. Review natural placement in headings, intro sections, and the main body. If the keyword feels forced, revise the wording before publishing.',
+          'This keeps your content helpful for users while still making the topic clear to search engines.',
+        ],
+      },
+    ],
+  },
+  {
+    slug: 'how-to-boost-page-speed',
+    title: 'How to Boost Page Speed',
+    description: 'Improve conversion, SEO performance, and user experience by reducing slow-loading content and streamlining page delivery.',
+    category: 'SEO',
+    readTime: '5 min read',
+    publishedAt: 'October 2026',
+    content: [
+      {
+        heading: 'Speed affects everything',
+        text: [
+          'Page speed influences how users feel about a site. If a page takes too long to load, visitors are more likely to leave, and a slow experience can also reduce trust in the content or tool itself.',
+          'This is why speed is not just a technical detail. It is part of the user experience.',
+        ],
+      },
+      {
+        heading: 'Where to begin',
+        text: [
+          'Compress images, reduce unnecessary scripts, and remove heavy or redundant content that does not add value. A simpler page often loads faster and is easier to understand.',
+          'For tool sites especially, focus on clean interfaces, lean assets, and quick interactions that feel smooth on mobile devices.',
+        ],
+      },
+      {
+        heading: 'Measure before and after',
+        text: [
+          'Use page speed checks to compare the before-and-after impact of your changes. It is easier to improve what you can measure, and small gains often add up across the site.',
+          'When design, performance, and content quality work together, users stay longer and the site feels more trustworthy.',
+        ],
+      },
+    ],
+  },
+  {
+    slug: 'how-to-improve-seo-without-coding',
+    title: 'How to Improve SEO Without Coding',
+    description: 'Great SEO does not always require technical skills. Focus on structure, content clarity, and practical optimization habits that produce real results.',
+    category: 'SEO',
+    readTime: '6 min read',
+    publishedAt: 'October 2026',
+    content: [
+      {
+        heading: 'Start with content quality',
+        text: [
+          'A strong page does not need to be technical to be effective. It needs to answer user intent clearly, use relevant language, and be easy to read on both desktop and mobile devices.',
+          'Good content wins because it gives the visitor something useful and supports better engagement metrics over time.',
+        ],
+      },
+      {
+        heading: 'Use better structure',
+        text: [
+          'Clear headings, short paragraphs, and logical page flow help both people and search engines understand your content. This makes your site easier to navigate and easier to trust.',
+          'You do not need to write code to improve structure. You just need a clear content plan and a consistent publishing routine.',
+        ],
+      },
+      {
+        heading: 'Keep improving slowly',
+        text: [
+          'SEO is a long-term process. Focus on useful pages, truthful descriptions, and consistent updates. Over time, this approach creates stronger search visibility without relying on shortcuts or gimmicks.',
+          'For small site owners, this is often the most sustainable path to better rankings and more organic traffic.',
+        ],
+      },
+    ],
+  },
 ];
 
 export const getBlogPostBySlug = (slug: string) => blogPosts.find((post) => post.slug === slug);

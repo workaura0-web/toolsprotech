@@ -195,6 +195,24 @@ export default function UnitConverter() {
 					</p>
 				</div>
 
+				<div className='mb-8 rounded-2xl border border-purple-200 bg-purple-50 p-5 shadow-sm'>
+					<h2 className='text-xl font-semibold text-purple-900 mb-3'>Why use this tool</h2>
+					<div className='grid gap-4 md:grid-cols-3'>
+						<div className='rounded-xl bg-white p-4'>
+							<p className='text-sm font-semibold text-purple-800 mb-1'>What it does</p>
+							<p className='text-sm text-slate-600'>Converts values across length, weight, speed, temperature, and other common measurement categories in seconds.</p>
+						</div>
+						<div className='rounded-xl bg-white p-4'>
+							<p className='text-sm font-semibold text-purple-800 mb-1'>Who should use it</p>
+							<p className='text-sm text-slate-600'>Useful for students, builders, travelers, and professionals comparing measurements across systems.</p>
+						</div>
+						<div className='rounded-xl bg-white p-4'>
+							<p className='text-sm font-semibold text-purple-800 mb-1'>Limitations</p>
+							<p className='text-sm text-slate-600'>The conversion is only as accurate as the units and numbers entered, and it does not replace specialized engineering calculations.</p>
+						</div>
+					</div>
+				</div>
+
 				<Card className='shadow-xl border-0 max-w-2xl mx-auto'>
 					<CardHeader>
 						<CardTitle>Unit Conversion</CardTitle>

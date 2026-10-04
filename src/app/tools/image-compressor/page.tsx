@@ -145,6 +145,24 @@ export default function ImageCompressor() {
 					</p>
 				</div>
 
+				<div className='mb-8 rounded-2xl border border-green-200 bg-green-50 p-5 shadow-sm'>
+					<h2 className='text-xl font-semibold text-green-900 mb-3'>Why use this tool</h2>
+					<div className='grid gap-4 md:grid-cols-3'>
+						<div className='rounded-xl bg-white p-4'>
+							<p className='text-sm font-semibold text-green-800 mb-1'>What it does</p>
+							<p className='text-sm text-slate-600'>Reduces image size for web use so pages load faster without making images look badly distorted.</p>
+						</div>
+						<div className='rounded-xl bg-white p-4'>
+							<p className='text-sm font-semibold text-green-800 mb-1'>Who should use it</p>
+							<p className='text-sm text-slate-600'>Helpful for bloggers, web admins, designers, and anyone preparing photos for websites or social media.</p>
+						</div>
+						<div className='rounded-xl bg-white p-4'>
+							<p className='text-sm font-semibold text-green-800 mb-1'>Limitations</p>
+							<p className='text-sm text-slate-600'>Very aggressive compression can reduce sharpness, so quality settings should match the final use case.</p>
+						</div>
+					</div>
+				</div>
+
 				<div className='grid grid-cols-1 lg:grid-cols-2 gap-8'>
 					{/* Upload Section */}
 					<Card className='shadow-xl border-0'>

@@ -182,6 +182,24 @@ export default function CurrencyConverter() {
 					</p>
 				</div>
 
+				<div className='mb-8 rounded-2xl border border-green-200 bg-green-50 p-5 shadow-sm'>
+					<h2 className='text-xl font-semibold text-green-900 mb-3'>Why use this tool</h2>
+					<div className='grid gap-4 md:grid-cols-3'>
+						<div className='rounded-xl bg-white p-4'>
+							<p className='text-sm font-semibold text-green-800 mb-1'>What it does</p>
+							<p className='text-sm text-slate-600'>Converts a value between major currencies using live rate data so travel, budgeting, and comparisons stay practical.</p>
+						</div>
+						<div className='rounded-xl bg-white p-4'>
+							<p className='text-sm font-semibold text-green-800 mb-1'>Who should use it</p>
+							<p className='text-sm text-slate-600'>Helpful for travelers, shoppers, freelancers, and businesses comparing cross-border costs.</p>
+						</div>
+						<div className='rounded-xl bg-white p-4'>
+							<p className='text-sm font-semibold text-green-800 mb-1'>Limitations</p>
+							<p className='text-sm text-slate-600'>Live rates can fluctuate, so the result is best for estimates and quick comparisons rather than final settlement amounts.</p>
+						</div>
+					</div>
+				</div>
+
 				<div className='grid grid-cols-1 lg:grid-cols-2 gap-8'>
 					{/* Converter */}
 					<Card className='shadow-xl border-0'>

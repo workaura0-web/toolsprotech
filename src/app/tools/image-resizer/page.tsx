@@ -176,6 +176,24 @@ export default function ImageResizer() {
 					</p>
 				</div>
 
+				<div className='mb-8 rounded-2xl border border-blue-200 bg-blue-50 p-5 shadow-sm'>
+					<h2 className='text-xl font-semibold text-blue-900 mb-3'>Why use this tool</h2>
+					<div className='grid gap-4 md:grid-cols-3'>
+						<div className='rounded-xl bg-white p-4'>
+							<p className='text-sm font-semibold text-blue-800 mb-1'>What it does</p>
+							<p className='text-sm text-slate-600'>Adjusts image dimensions so files fit websites, social posts, or documents without manual editing.</p>
+						</div>
+						<div className='rounded-xl bg-white p-4'>
+							<p className='text-sm font-semibold text-blue-800 mb-1'>Who should use it</p>
+							<p className='text-sm text-slate-600'>Useful for content creators, web admins, marketers, and anyone preparing images for different formats.</p>
+						</div>
+						<div className='rounded-xl bg-white p-4'>
+							<p className='text-sm font-semibold text-blue-800 mb-1'>Limitations</p>
+							<p className='text-sm text-slate-600'>A resize changes the image dimensions, so cropping or quality trade-offs may still be needed for the final use case.</p>
+						</div>
+					</div>
+				</div>
+
 				<div className='grid grid-cols-1 lg:grid-cols-2 gap-8'>
 					{/* Settings Section */}
 					<Card className='shadow-xl border-0'>

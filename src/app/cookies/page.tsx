@@ -72,23 +72,15 @@ export default function CookiesPage() {
 
 								<div className='border-l-4 border-green-500 pl-4'>
 									<h3 className='font-semibold text-gray-800 mb-2'>
-										Analytics Cookies
+										No First-Party Analytics Cookie System
 									</h3>
-									<p className='text-gray-600 text-sm mb-2'>
-										These cookies help us understand how
-										visitors interact with our website by
-										collecting and reporting information
-										anonymously.
+									<p className='text-gray-600 text-sm'>
+										This site does not currently operate a separate
+										first-party analytics cookie system. Any browser
+										storage or request data used by an individual tool is
+										described on that tool page and is not used as a site-wide
+										analytics product.
 									</p>
-									<ul className='text-gray-600 text-sm space-y-1'>
-										<li>
-											• Page views and traffic sources
-										</li>
-										<li>• Popular tools and features</li>
-										<li>
-											• User behavior patterns (anonymous)
-										</li>
-									</ul>
 								</div>
 
 								<div className='border-l-4 border-amber-500 pl-4'>

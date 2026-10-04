@@ -176,6 +176,24 @@ export default function PDFCompressor() {
 					</p>
 				</div>
 
+				<div className='mb-8 rounded-2xl border border-blue-200 bg-blue-50 p-5 shadow-sm'>
+					<h2 className='text-xl font-semibold text-blue-900 mb-3'>Why use this tool</h2>
+					<div className='grid gap-4 md:grid-cols-3'>
+						<div className='rounded-xl bg-white p-4'>
+							<p className='text-sm font-semibold text-blue-800 mb-1'>What it does</p>
+							<p className='text-sm text-slate-600'>Shrinks PDF files so they are easier to share, upload, or store without damaging basic readability.</p>
+						</div>
+						<div className='rounded-xl bg-white p-4'>
+							<p className='text-sm font-semibold text-blue-800 mb-1'>Who should use it</p>
+							<p className='text-sm text-slate-600'>Useful for students, freelancers, office teams, and anyone sending large documents over email or chat.</p>
+						</div>
+						<div className='rounded-xl bg-white p-4'>
+							<p className='text-sm font-semibold text-blue-800 mb-1'>Limitations</p>
+							<p className='text-sm text-slate-600'>Very high compression can reduce visual quality or make scanning text less ideal in some documents.</p>
+						</div>
+					</div>
+				</div>
+
 				<div className='grid gap-6 lg:grid-cols-2'>
 					<Card>
 						<CardHeader>
