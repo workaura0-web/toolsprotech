@@ -138,7 +138,7 @@ export default function PDFSplitter() {
 					);
 					copiedPages.forEach((page) => newPdf.addPage(page));
 					const newBytes = await newPdf.save();
-					const blob = new Blob([newBytes], {
+					const blob = new Blob([newBytes as unknown as BlobPart], {
 						type: "application/pdf",
 					});
 					splitFiles.push({
@@ -177,7 +177,7 @@ export default function PDFSplitter() {
 					);
 					copiedPages.forEach((page) => newPdf.addPage(page));
 					const newBytes = await newPdf.save();
-					const blob = new Blob([newBytes], {
+					const blob = new Blob([newBytes as unknown as BlobPart], {
 						type: "application/pdf",
 					});
 					splitFiles.push({
@@ -197,7 +197,7 @@ export default function PDFSplitter() {
 					const [copiedPage] = await newPdf.copyPages(pdfDoc, [i]);
 					newPdf.addPage(copiedPage);
 					const newBytes = await newPdf.save();
-					const blob = new Blob([newBytes], {
+					const blob = new Blob([newBytes as unknown as BlobPart], {
 						type: "application/pdf",
 					});
 					splitFiles.push({

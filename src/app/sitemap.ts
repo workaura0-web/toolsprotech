@@ -2,6 +2,22 @@ import type { MetadataRoute } from "next";
 import { blogPosts } from "@/lib/blog-posts";
 import { SITE_URL } from "@/lib/constant";
 
+const highPriorityTools = new Set([
+	"robots-generator",
+	"adsense-calculator",
+	"domain-age-checker",
+	"domain-authority-checker",
+	"meta-tag-generator",
+	"percentage-calculator",
+	"bmi-calculator",
+	"emi-calculator",
+	"word-counter",
+	"image-compressor",
+	"pdf-merger",
+	"qr-generator",
+	"currency-converter",
+]);
+
 const toolSlugs = [
 	"meta-tag-generator", "favicon-generator", "domain-age-checker", "domain-ip-lookup",
 	"domain-authority-checker", "page-authority-checker", "wordpress-detector", "my-ip-address",
@@ -17,21 +33,21 @@ const toolSlugs = [
 ];
 
 export default function sitemap(): MetadataRoute.Sitemap {
-	const staticRoutes = ["", "/about", "/blog", "/contact", "/terms", "/privacy", "/disclaimer", "/cookies", "/hiring", "/tools"];
+	const staticRoutes = ["", "/about", "/blog", "/contact", "/terms", "/privacy", "/disclaimer", "/cookies", "/tools"];
 	const lastModified = new Date();
 
 	return [
 		...staticRoutes.map((route) => ({
 			url: `${SITE_URL}${route}`,
 			lastModified,
-			changeFrequency: route === "/blog" ? "weekly" as const : "monthly" as const,
-			priority: route === "" ? 1 : route === "/tools" || route === "/blog" ? 0.9 : 0.5,
+			changeFrequency: route === "" ? ("daily" as const) : route === "/blog" ? ("weekly" as const) : ("monthly" as const),
+			priority: route === "" ? 1.0 : route === "/tools" || route === "/blog" ? 0.9 : 0.6,
 		})),
 		...toolSlugs.map((slug) => ({
 			url: `${SITE_URL}/tools/${slug}`,
 			lastModified,
-			changeFrequency: "monthly" as const,
-			priority: 0.7,
+			changeFrequency: "weekly" as const,
+			priority: highPriorityTools.has(slug) ? 0.85 : 0.75,
 		})),
 		...blogPosts.map((post) => ({
 			url: `${SITE_URL}/blog/${post.slug}`,

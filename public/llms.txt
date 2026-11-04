@@ -1,22 +1,99 @@
-# ToolsProTech
+# ToolsProTech — Free Online Tools & Utilities
+> High-performance, client-side online tools for SEO, financial and academic calculations, text formatting, image compression, PDF operations, security, and web development.
 
-ToolsProTech is a free online utility website for SEO, calculators, text, image, PDF, developer, and productivity tasks.
-
-## Important pages
-
+## Core Website URLs
 - Homepage: https://toolsprotech.com/
-- Tools directory: https://toolsprotech.com/tools
-- Blog and guides: https://toolsprotech.com/blog
-- About: https://toolsprotech.com/about
-- Contact: https://toolsprotech.com/contact
-- Privacy policy: https://toolsprotech.com/privacy
-- Terms: https://toolsprotech.com/terms
-- Disclaimer: https://toolsprotech.com/disclaimer
+- All Tools Directory: https://toolsprotech.com/tools
+- Blog & Guides: https://toolsprotech.com/blog
+- About Us & Editorial Standards: https://toolsprotech.com/about
+- Contact & Support: https://toolsprotech.com/contact
+- Privacy Policy: https://toolsprotech.com/privacy
+- Terms of Service: https://toolsprotech.com/terms
+- XML Sitemap: https://toolsprotech.com/sitemap.xml
 
-## Content guidance
+## Tools Directory Index & API Directives
 
-Tool pages explain the purpose of each utility, provide usage steps, practical use cases, limitations, FAQs, and links to related tools. Blog articles provide educational guidance about online tools, SEO, productivity, and website quality.
+### SEO & Webmaster Tools
+- Robots.txt Generator: https://toolsprotech.com/tools/robots-generator
+  - Purpose: Generates standardized, error-free robots.txt files for Googlebot, Bingbot, and AI crawlers with Allow, Disallow, Crawl-delay, and Sitemap directives.
+- Meta Tag Generator: https://toolsprotech.com/tools/meta-tag-generator
+  - Purpose: Generates HTML <title>, <meta description>, OpenGraph, and Twitter Cards for search engine and social feed optimization.
+- XML Sitemap Generator: https://toolsprotech.com/tools/sitemap-generator
+  - Purpose: Compiles URLs into a compliant sitemaps.org XML protocol document.
+- Domain Age Checker: https://toolsprotech.com/tools/domain-age-checker
+  - Purpose: Queries WHOIS registry records for creation date, expiration, and registrar details.
+- Domain Authority Checker: https://toolsprotech.com/tools/domain-authority-checker
+  - Purpose: Inspects page rank and algorithmic authority signals for competitor benchmarking.
+- Keyword Density Checker: https://toolsprotech.com/tools/keyword-density-checker
+  - Purpose: Measures word and phrase frequency percentages to prevent over-optimization.
+- WordPress Detector: https://toolsprotech.com/tools/wordpress-detector
+  - Purpose: Detects WordPress CMS signatures, active themes, and plugins.
+- My IP Address: https://toolsprotech.com/tools/my-ip-address
+  - Purpose: Displays client public IP address, ISP, ASN, and geolocation details.
+- Domain IP Lookup: https://toolsprotech.com/tools/domain-ip-lookup
+  - Purpose: Resolves domain A records to host server IP and ISP provider.
 
-## Trust and privacy
+### Calculators & Financial Tools
+- Google AdSense Revenue Calculator: https://toolsprotech.com/tools/adsense-calculator
+  - Purpose: Estimates publisher earnings based on page views, CTR, CPC, and commercial content niches (Finance, Tech, Health, Lifestyle).
+- Percentage Calculator: https://toolsprotech.com/tools/percentage-calculator
+  - Purpose: Computes percentage of a number, percentage increase/decrease, and relative percentage.
+- BMI Calculator: https://toolsprotech.com/tools/bmi-calculator
+  - Purpose: Calculates Body Mass Index using Metric and Imperial units according to WHO standards.
+- EMI Calculator: https://toolsprotech.com/tools/emi-calculator
+  - Purpose: Computes monthly loan amortization installments, total interest, and principal breakdown.
+- Live Currency Converter: https://toolsprotech.com/tools/currency-converter
+  - Purpose: Real-time foreign exchange conversions across 25+ global fiat currencies.
+- Age Calculator: https://toolsprotech.com/tools/age-calculator
+  - Purpose: Computes chronological age in years, months, days, hours, and countdown to next birthday.
+- GPA Converter: https://toolsprotech.com/tools/gpa-converter
+  - Purpose: Converts academic grades across 4.0, 10-point, and percentage scales.
+- Unit Converter: https://toolsprotech.com/tools/unit-converter
+  - Purpose: Converts length, mass, temperature, area, speed, and volume units.
 
-Visitors should review the privacy policy and disclaimer before using tools for sensitive or important decisions. Results are provided as practical assistance and should be verified against an appropriate primary or professional source where necessary.
+### Image & Media Tools
+- Image Compressor: https://toolsprotech.com/tools/image-compressor
+  - Purpose: Client-side compression for JPG, PNG, and WebP images to speed up web pages without server uploads.
+- Image Resizer: https://toolsprotech.com/tools/image-resizer
+  - Purpose: Adjusts image pixel dimensions with aspect ratio preservation.
+- JPG to PNG Converter: https://toolsprotech.com/tools/jpg-to-png
+  - Purpose: Converts JPEG files into transparent-supported PNG images.
+- PNG to JPG Converter: https://toolsprotech.com/tools/png-to-jpg
+  - Purpose: Converts heavy PNG graphics into compressed JPG format.
+- PNG to WebP Converter: https://toolsprotech.com/tools/png-to-webp
+  - Purpose: Modern next-gen WebP image conversion for Core Web Vitals (LCP) optimization.
+
+### PDF Utilities
+- PDF Merger: https://toolsprotech.com/tools/pdf-merger
+  - Purpose: Combines multiple PDF files into one ordered document in browser memory.
+- PDF Compressor: https://toolsprotech.com/tools/pdf-compressor
+  - Purpose: Compresses PDF file size for email and portal submissions.
+- PDF Splitter: https://toolsprotech.com/tools/pdf-splitter
+  - Purpose: Splits PDFs into single pages or custom page ranges.
+
+### Security & Developer Tools
+- Password Generator: https://toolsprotech.com/tools/password-generator
+  - Purpose: Generates cryptographically secure, high-entropy random passwords using Web Crypto API.
+- Password Strength Checker: https://toolsprotech.com/tools/password-strength-checker
+  - Purpose: Evaluates password entropy locally without saving or sending data.
+- JSON Formatter & Validator: https://toolsprotech.com/tools/json-formatter
+  - Purpose: Validates, beautifies, and minifies JSON structures for API debugging.
+- Base64 Encoder/Decoder: https://toolsprotech.com/tools/base64
+  - Purpose: Converts text to Base64 and decodes Base64 strings.
+- UUID Generator: https://toolsprotech.com/tools/uuid-generator
+  - Purpose: Creates RFC 4122 compliant UUID v4 identifier strings.
+- QR Code Generator: https://toolsprotech.com/tools/qr-generator
+  - Purpose: Creates static 2D QR matrix barcodes for URLs, text, and Wi-Fi credentials.
+
+### Text & Writing Utilities
+- Word Counter: https://toolsprotech.com/tools/word-counter
+  - Purpose: Real-time word, character, sentence, paragraph, and reading time counter.
+- Case Converter: https://toolsprotech.com/tools/case-converter
+  - Purpose: Transforms text between UPPERCASE, lowercase, Title Case, camelCase, snake_case, and kebab-case.
+- Text Diff Checker: https://toolsprotech.com/tools/text-diff-checker
+  - Purpose: Side-by-side comparison of text versions showing additions and deletions.
+
+## Trust & Privacy Guarantee
+- 100% Client-side sandbox execution for image, PDF, text, password, and math utilities.
+- Zero tracking or retention of sensitive user documents, files, or passwords.
+- Free, non-commercial educational utilities maintained by ToolsProTech.

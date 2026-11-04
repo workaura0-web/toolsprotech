@@ -1,35 +1,8 @@
 import type { Metadata } from "next";
 import { headers } from "next/headers";
 import ToolGuide from "@/components/tool-guide";
-
-const baseDescription =
-	"Use practical free online tools for SEO, calculations, text, images, PDFs, and everyday digital tasks.";
-
-function titleFromSlug(slug: string) {
-	const specialWords: Record<string, string> = {
-		adsense: "AdSense",
-		base64: "Base64",
-		bmi: "BMI",
-		emi: "EMI",
-		gpa: "GPA",
-		ip: "IP",
-		jpg: "JPG",
-		json: "JSON",
-		pdf: "PDF",
-		png: "PNG",
-		qr: "QR",
-		seo: "SEO",
-		url: "URL",
-		uuid: "UUID",
-		whatsapp: "WhatsApp",
-		wordpress: "WordPress",
-	};
-
-	return slug
-		.split("-")
-		.map((word) => specialWords[word] ?? word.charAt(0).toUpperCase() + word.slice(1))
-		.join(" ");
-}
+import { getToolData } from "@/lib/tools-data";
+import { SITE_NAME, SITE_URL } from "@/lib/constant";
 
 export async function generateMetadata(): Promise<Metadata> {
 	const requestHeaders = await headers();
@@ -37,30 +10,40 @@ export async function generateMetadata(): Promise<Metadata> {
 
 	if (!slug) {
 		return {
-			title: "Free Online Tools | ToolsProTech",
-			description: baseDescription,
+			title: `Free Online Tools for SEO, Dev & Calculations – ${SITE_NAME}`,
+			description:
+				"Explore 50+ free online tools for SEO, calculations, text formatting, image compression, PDF operations, and web development. No signup required.",
+			alternates: { canonical: `${SITE_URL}/tools` },
 		};
 	}
 
-	const title = titleFromSlug(slug);
-	const description = `Use the free ${title.toLowerCase()} from ToolsProTech. Learn what it does, how to use it, practical benefits, limitations, and answers to common questions.`;
-	const url = `https://toolsprotech.com/tools/${slug}`;
+	const tool = getToolData(slug);
+	const url = `${SITE_URL}/tools/${slug}`;
+
 	return {
-		title: `${title} | ToolsProTech`,
-		description,
-		keywords: [title, `free ${title.toLowerCase()}`, `${title} online`, "ToolsProTech"],
+		title: tool.metaTitle,
+		description: tool.metaDescription,
+		keywords: tool.keywords,
 		alternates: { canonical: url },
 		openGraph: {
 			type: "website",
 			url,
-			title: `${title} | ToolsProTech`,
-			description,
-			siteName: "ToolsProTech",
+			title: tool.metaTitle,
+			description: tool.metaDescription,
+			siteName: SITE_NAME,
+			images: [
+				{
+					url: `${SITE_URL}/favicon.ico`,
+					width: 1200,
+					height: 630,
+					alt: tool.title,
+				},
+			],
 		},
 		twitter: {
-			card: "summary",
-			title: `${title} | ToolsProTech`,
-			description,
+			card: "summary_large_image",
+			title: tool.metaTitle,
+			description: tool.metaDescription,
 		},
 	};
 }
