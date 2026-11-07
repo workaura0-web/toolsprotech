@@ -1,22 +1,30 @@
 import { NextRequest, NextResponse } from "next/server";
+import { isValidDomain } from "@/lib/security";
 
-const OPENPAGERANK_API_KEY = "wk0c8000oo08o0c0ggcwo80oow0sgcgg8s8gc8gc";
+const OPENPAGERANK_API_KEY =
+	process.env.OPENPAGERANK_API_KEY || "wk0c8000oo08o0c0ggcwo80oow0sgcgg8s8gc8gc";
 
 export async function GET(request: NextRequest) {
 	const { searchParams } = new URL(request.url);
-	const domain = searchParams.get("domain");
+	let domain = searchParams.get("domain");
 
 	if (!domain) {
 		return NextResponse.json(
-			{ error: "Missing domain parameter" },
+			{ error: "Domain parameter is required" },
 			{ status: 400 }
 		);
 	}
 
-	if (!OPENPAGERANK_API_KEY) {
+	// Clean and normalize domain
+	domain = domain.toLowerCase().trim();
+	domain = domain.replace(/^https?:\/\//, "");
+	domain = domain.replace(/^www\./, "");
+	domain = domain.split("/")[0].split("?")[0].split("#")[0];
+
+	if (!isValidDomain(domain)) {
 		return NextResponse.json(
-			{ error: "Missing Open PageRank API key" },
-			{ status: 500 }
+			{ error: "Invalid domain name syntax. Example: example.com" },
+			{ status: 400 }
 		);
 	}
 
@@ -29,33 +37,62 @@ export async function GET(request: NextRequest) {
 				headers: {
 					"API-OPR": OPENPAGERANK_API_KEY,
 				},
+				signal: AbortSignal.timeout(6000),
 			}
 		);
+
 		if (!response.ok) {
-			const err = await response.text();
-			return NextResponse.json({ error: err }, { status: 500 });
+			try {
+				const errJson = await response.json();
+				if (response.status === 401) {
+					return NextResponse.json(
+						{
+							error: "OpenPageRank API key requires renewal. Please configure a free OPENPAGERANK_API_KEY from openpagerank.keywordseverywhere.com in your environment settings.",
+							docs: "https://openpagerank.keywordseverywhere.com/dashboard",
+						},
+						{ status: 401 }
+					);
+				}
+				return NextResponse.json(
+					{ error: errJson.message || "OpenPageRank query failed" },
+					{ status: response.status }
+				);
+			} catch {
+				return NextResponse.json(
+					{ error: "OpenPageRank query error" },
+					{ status: response.status }
+				);
+			}
 		}
+
 		const data = await response.json();
-		console.log("data", data);
-		// The API returns an array of results
 		const result = data.response?.[0];
-		if (!result) {
+
+		if (!result || result.status_code === 404) {
 			return NextResponse.json(
-				{ error: "No data found for domain" },
-				{ status: 404 }
+				{
+					domain,
+					page_rank_integer: 0,
+					page_rank_decimal: 0,
+					rank: "Unranked",
+					status: "Domain not yet indexed in global PageRank registry",
+				},
+				{ status: 200 }
 			);
 		}
+
 		return NextResponse.json({
 			domain: result.domain,
-			page_rank_integer: result.page_rank_integer,
-			page_rank_decimal: result.page_rank_decimal,
-			rank: result.rank,
-			// Add more fields as needed from the API response
+			page_rank_integer: result.page_rank_integer ?? 0,
+			page_rank_decimal: result.page_rank_decimal ?? 0,
+			rank: result.rank ?? "Unranked",
+			provider: "OpenPageRank (Independent Global Index)",
+			updated_at: new Date().toISOString(),
 		});
 	} catch (error) {
 		return NextResponse.json(
-			{ error: "Failed to fetch domain authority" },
-			{ status: 500 }
+			{ error: "Failed to connect to PageRank provider. Please verify network or try again." },
+			{ status: 502 }
 		);
 	}
 }

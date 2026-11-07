@@ -22,43 +22,68 @@ type ExchangeData = {
 	target: string;
 	date: string;
 	lastUpdated: string;
+	provider: string;
 };
 
 export async function GET(request: NextRequest) {
 	const { searchParams } = new URL(request.url);
-	const from = searchParams.get("from");
-	const to = searchParams.get("to");
+	let from = searchParams.get("from");
+	let to = searchParams.get("to");
 	const amount = searchParams.get("amount");
 
 	if (!from || !to) {
 		return NextResponse.json(
-			{ error: "From and to currency parameters are required" },
+			{ error: "From and To currency symbols are required. Example: ?from=USD&to=EUR" },
 			{ status: 400 }
 		);
 	}
 
+	from = from.toUpperCase().trim();
+	to = to.toUpperCase().trim();
+
+	const currencyRegex = /^[A-Z]{3}$/;
+	if (!currencyRegex.test(from) || !currencyRegex.test(to)) {
+		return NextResponse.json(
+			{ error: "Invalid ISO 4217 currency code format. Must be 3 letters (e.g. USD, EUR, GBP)." },
+			{ status: 400 }
+		);
+	}
+
+	if (from === to) {
+		const amt = amount ? parseFloat(amount) : 1;
+		return NextResponse.json({
+			from,
+			to,
+			rate: 1,
+			amount: amt,
+			convertedAmount: amt,
+			date: new Date().toISOString().split("T")[0],
+			lastUpdated: new Date().toISOString(),
+			provider: "Direct Parity",
+		});
+	}
+
 	try {
-		// Try multiple free currency APIs for better reliability
+		// Try multiple free real-time currency APIs
 		const apis = [
 			{
-				url: `https://api.exchangerate-api.com/v4/latest/${from}`,
-				name: "exchangerate-api.com",
-				timeout: 5000,
+				url: `https://api.frankfurter.app/latest?from=${from}&to=${to}`,
+				name: "Frankfurter / European Central Bank",
+				timeout: 4000,
 			},
 			{
 				url: `https://open.er-api.com/v6/latest/${from}`,
-				name: "open.er-api.com",
-				timeout: 5000,
+				name: "Open Exchange Rates Feed",
+				timeout: 4000,
 			},
 			{
-				url: `https://api.frankfurter.app/latest?from=${from}&to=${to}`,
-				name: "frankfurter.app",
-				timeout: 5000,
+				url: `https://api.exchangerate-api.com/v4/latest/${from}`,
+				name: "ExchangeRate API",
+				timeout: 4000,
 			},
 		];
 
 		let exchangeData: ExchangeData | null = null;
-		let lastError: string = "";
 
 		for (const api of apis) {
 			try {
@@ -66,49 +91,14 @@ export async function GET(request: NextRequest) {
 					method: "GET",
 					headers: {
 						Accept: "application/json",
-						"User-Agent":
-							"Mozilla/5.0 (compatible; CurrencyConverter/1.0)",
+						"User-Agent": "ToolsProTech-Currency/1.0",
 					},
 					signal: AbortSignal.timeout(api.timeout),
 				});
 
-				if (!response.ok) {
-					if (response.status === 429) {
-						console.warn(
-							`${api.name} rate limited, trying next API`
-						);
-						continue;
-					}
-					throw new Error(
-						`HTTP ${response.status}: ${response.statusText}`
-					);
-				}
+				if (!response.ok) continue;
 
-				if (api.name === "exchangerate-api.com") {
-					const data: ExchangeRateApiResponse = await response.json();
-					if (data.rates && data.rates[to]) {
-						exchangeData = {
-							rate: data.rates[to],
-							base: data.base,
-							target: to,
-							date: data.date,
-							lastUpdated: new Date().toISOString(),
-						};
-						break;
-					}
-				} else if (api.name === "open.er-api.com") {
-					const data: OpenErApiResponse = await response.json();
-					if (data.rates && data.rates[to]) {
-						exchangeData = {
-							rate: data.rates[to],
-							base: data.base_code,
-							target: to,
-							date: data.time_last_update_utc,
-							lastUpdated: new Date().toISOString(),
-						};
-						break;
-					}
-				} else if (api.name === "frankfurter.app") {
+				if (api.name.includes("Frankfurter")) {
 					const data: FrankfurterApiResponse = await response.json();
 					if (data.rates && data.rates[to]) {
 						exchangeData = {
@@ -117,14 +107,38 @@ export async function GET(request: NextRequest) {
 							target: to,
 							date: data.date,
 							lastUpdated: new Date().toISOString(),
+							provider: api.name,
+						};
+						break;
+					}
+				} else if (api.name.includes("Open Exchange")) {
+					const data: OpenErApiResponse = await response.json();
+					if (data.rates && data.rates[to]) {
+						exchangeData = {
+							rate: data.rates[to],
+							base: data.base_code,
+							target: to,
+							date: data.time_last_update_utc,
+							lastUpdated: new Date().toISOString(),
+							provider: api.name,
+						};
+						break;
+					}
+				} else if (api.name.includes("ExchangeRate")) {
+					const data: ExchangeRateApiResponse = await response.json();
+					if (data.rates && data.rates[to]) {
+						exchangeData = {
+							rate: data.rates[to],
+							base: data.base,
+							target: to,
+							date: data.date,
+							lastUpdated: new Date().toISOString(),
+							provider: api.name,
 						};
 						break;
 					}
 				}
-			} catch (err) {
-				lastError =
-					err instanceof Error ? err.message : "Unknown error";
-				console.warn(`${api.name} failed:`, lastError);
+			} catch {
 				continue;
 			}
 		}
@@ -132,22 +146,21 @@ export async function GET(request: NextRequest) {
 		if (!exchangeData) {
 			return NextResponse.json(
 				{
-					error: "Failed to fetch exchange rate from all available APIs",
+					error: `Real-time exchange rate for ${from} to ${to} is currently unavailable.`,
 				},
-				{ status: 500 }
+				{ status: 502 }
 			);
 		}
 
-		// Calculate converted amount if provided
 		let convertedAmount: number | null = null;
 		if (amount) {
 			const amountNum = parseFloat(amount);
-			if (!isNaN(amountNum)) {
-				convertedAmount = amountNum * exchangeData.rate;
+			if (!isNaN(amountNum) && amountNum >= 0 && Number.isFinite(amountNum)) {
+				convertedAmount = parseFloat((amountNum * exchangeData.rate).toFixed(4));
 			}
 		}
 
-		const result = {
+		return NextResponse.json({
 			from: exchangeData.base,
 			to: exchangeData.target,
 			rate: exchangeData.rate,
@@ -155,15 +168,12 @@ export async function GET(request: NextRequest) {
 			convertedAmount: convertedAmount,
 			date: exchangeData.date,
 			lastUpdated: exchangeData.lastUpdated,
-		};
-
-		return NextResponse.json(result);
+			provider: exchangeData.provider,
+		});
 	} catch (error) {
-		const errorMessage =
-			error instanceof Error
-				? error.message
-				: "Failed to retrieve exchange rate";
-		console.error("Currency conversion error:", errorMessage);
-		return NextResponse.json({ error: errorMessage }, { status: 500 });
+		return NextResponse.json(
+			{ error: "Currency conversion server error. Please try again." },
+			{ status: 500 }
+		);
 	}
 }

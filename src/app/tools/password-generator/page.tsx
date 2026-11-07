@@ -45,10 +45,16 @@ export default function PasswordGenerator() {
 		}
 
 		let result = "";
-		for (let i = 0; i < length[0]; i++) {
-			result += charset.charAt(
-				Math.floor(Math.random() * charset.length)
-			);
+		const randomValues = new Uint32Array(length[0]);
+		if (typeof window !== "undefined" && window.crypto && window.crypto.getRandomValues) {
+			window.crypto.getRandomValues(randomValues);
+			for (let i = 0; i < length[0]; i++) {
+				result += charset.charAt(randomValues[i] % charset.length);
+			}
+		} else {
+			for (let i = 0; i < length[0]; i++) {
+				result += charset.charAt(Math.floor(Math.random() * charset.length));
+			}
 		}
 		setPassword(result);
 	};

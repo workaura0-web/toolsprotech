@@ -1,33 +1,67 @@
 import { NextRequest, NextResponse } from "next/server";
+import { validateSafeOutboundUrl } from "@/lib/security";
 
 export async function GET(request: NextRequest) {
 	const { searchParams } = new URL(request.url);
-	let url = searchParams.get("url");
+	const rawUrl = searchParams.get("url");
 
-	if (!url) {
+	if (!rawUrl) {
 		return NextResponse.json(
 			{ error: "Missing url parameter" },
 			{ status: 400 }
 		);
 	}
 
-	if (!/^https?:\/\//.test(url)) {
-		url = "https://" + url;
+	// Validate URL against SSRF and private networks
+	const validation = await validateSafeOutboundUrl(rawUrl);
+	if (!validation.safe || !validation.url) {
+		return NextResponse.json(
+			{ error: validation.error || "Target URL is not permitted or unreachable" },
+			{ status: 400 }
+		);
 	}
 
+	const safeUrl = validation.url.toString();
+
 	try {
-		// Fetch the HTML of the target site
-		const res = await fetch(url, {
-			headers: { "User-Agent": "Mozilla/5.0 (WordPressDetector)" },
-			next: { revalidate: 60 },
+		// Fetch with strict timeout and headers
+		const controller = new AbortController();
+		const timeoutId = setTimeout(() => controller.abort(), 6000);
+
+		const res = await fetch(safeUrl, {
+			headers: {
+				"User-Agent": "Mozilla/5.0 (compatible; ToolsProTech-Detector/1.0)",
+				"Accept": "text/html,application/xhtml+xml",
+			},
+			signal: controller.signal,
+			redirect: "follow",
 		});
+		clearTimeout(timeoutId);
+
 		if (!res.ok) {
 			return NextResponse.json(
-				{ error: `Failed to fetch site: ${res.status}` },
-				{ status: 500 }
+				{ error: `Target website returned HTTP status ${res.status}` },
+				{ status: 422 }
 			);
 		}
-		const html = await res.text();
+
+		// Read up to 512KB to avoid memory exhaustion
+		const reader = res.body?.getReader();
+		let html = "";
+		if (reader) {
+			const decoder = new TextDecoder("utf-8");
+			let bytesRead = 0;
+			const maxBytes = 512 * 1024; // 512 KB
+			while (bytesRead < maxBytes) {
+				const { done, value } = await reader.read();
+				if (done) break;
+				bytesRead += value.byteLength;
+				html += decoder.decode(value, { stream: true });
+			}
+			reader.cancel();
+		} else {
+			html = await res.text();
+		}
 
 		// Detect WordPress markers
 		const isWordPress =
@@ -37,7 +71,7 @@ export async function GET(request: NextRequest) {
 			/<meta[^>]+name=["']generator["'][^>]+WordPress/i.test(html);
 
 		let version = "";
-		// Try to extract version from meta tag
+		// Extract version from meta tag
 		const metaMatch = html.match(
 			/<meta[^>]+name=["']generator["'][^>]+content=["']WordPress\s*([\d.]+)["']/i
 		);
@@ -45,54 +79,7 @@ export async function GET(request: NextRequest) {
 			version = metaMatch[1];
 		}
 
-		// Try to fetch /readme.html for version
-		if (!version) {
-			try {
-				const readmeRes = await fetch(
-					url.replace(/\/$/, "") + "/readme.html",
-					{
-						headers: {
-							"User-Agent": "Mozilla/5.0 (WordPressDetector)",
-						},
-						next: { revalidate: 60 },
-					}
-				);
-				if (readmeRes.ok) {
-					const readme = await readmeRes.text();
-					const vMatch = readme.match(/Version\s*([\d.]+)/i);
-					if (vMatch) version = vMatch[1];
-				}
-			} catch {}
-		}
-
-		// Try to fetch /wp-json/ for version
-		if (!version) {
-			try {
-				const apiRes = await fetch(
-					url.replace(/\/$/, "") + "/wp-json/",
-					{
-						headers: {
-							"User-Agent": "Mozilla/5.0 (WordPressDetector)",
-						},
-						next: { revalidate: 60 },
-					}
-				);
-				if (apiRes.ok) {
-					const json = await apiRes.json();
-					if (
-						json &&
-						json?.generator &&
-						typeof json.generator === "string"
-					) {
-						const vMatch =
-							json.generator.match(/WordPress\s*([\d.]+)/i);
-						if (vMatch) version = vMatch[1];
-					}
-				}
-			} catch {}
-		}
-
-		// Detect theme from HTML
+		// Theme detection from HTML
 		const theme = {
 			name: "",
 			version: "",
@@ -103,34 +90,11 @@ export async function GET(request: NextRequest) {
 		const themeMatch = html.match(/\/wp-content\/themes\/([a-zA-Z0-9_-]+)/);
 		if (themeMatch) {
 			theme.name = themeMatch[1];
-			theme.url =
-				url.replace(/\/$/, "") + `/wp-content/themes/${theme.name}/`;
+			const baseUrl = safeUrl.replace(/\/$/, "");
+			theme.url = `${baseUrl}/wp-content/themes/${theme.name}/`;
 		}
 
-		// Try to fetch style.css for theme details
-		if (theme.name) {
-			try {
-				const styleRes = await fetch(theme.url + "style.css", {
-					headers: {
-						"User-Agent": "Mozilla/5.0 (WordPressDetector)",
-					},
-					next: { revalidate: 60 },
-				});
-				if (styleRes.ok) {
-					const style = await styleRes.text();
-					const nameMatch = style.match(/Theme Name:\s*(.+)/i);
-					const authorMatch = style.match(/Author:\s*(.+)/i);
-					const descMatch = style.match(/Description:\s*(.+)/i);
-					const verMatch = style.match(/Version:\s*([\d.]+)/i);
-					if (nameMatch) theme.name = nameMatch[1].trim();
-					if (authorMatch) theme.author = authorMatch[1].trim();
-					if (descMatch) theme.description = descMatch[1].trim();
-					if (verMatch) theme.version = verMatch[1].trim();
-				}
-			} catch {}
-		}
-
-		// Detect plugins from HTML (best effort)
+		// Plugin detection from HTML
 		const pluginRegex = /\/wp-content\/plugins\/([a-zA-Z0-9_-]+)/g;
 		const pluginsSet = new Set<string>();
 		let match;
@@ -144,23 +108,23 @@ export async function GET(request: NextRequest) {
 			active: true,
 		}));
 
-		// Detect server from headers
-		let server = "";
-		if (res.headers.get("server")) server = res.headers.get("server")!;
+		// Server info
+		const server = res.headers.get("server") || "Unknown";
 
 		return NextResponse.json({
-			url,
+			url: safeUrl,
 			isWordPress,
-			version,
+			version: version || (isWordPress ? "Detected (Hidden for security)" : "N/A"),
 			theme,
 			plugins,
 			server,
 			lastUpdated: new Date().toISOString().split("T")[0],
 		});
-	} catch (error) {
+	} catch (error: unknown) {
+		const isAbort = error instanceof Error && error.name === "AbortError";
 		return NextResponse.json(
-			{ error: "Failed to fetch or parse site." },
-			{ status: 500 }
+			{ error: isAbort ? "Connection timed out while analyzing the target site" : "Failed to analyze target website" },
+			{ status: 504 }
 		);
 	}
 }

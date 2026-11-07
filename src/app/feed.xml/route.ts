@@ -18,7 +18,7 @@ export function GET() {
       <link>${SITE_URL}/blog/${post.slug}</link>
       <guid isPermaLink="true">${SITE_URL}/blog/${post.slug}</guid>
       <description>${escapeXml(post.description)}</description>
-      <pubDate>${new Date(post.publishedAt).toUTCString()}</pubDate>
+      <pubDate>${isNaN(new Date(post.publishedAt).getTime()) ? new Date().toUTCString() : new Date(post.publishedAt).toUTCString()}</pubDate>
     </item>`).join("");
 
 	const xml = `<?xml version="1.0" encoding="UTF-8"?>

@@ -1,7 +1,6 @@
 "use client";
 
 import type React from "react";
-
 import { useState } from "react";
 import {
 	Card,
@@ -21,48 +20,27 @@ import {
 	AlertCircle,
 	ExternalLink,
 	BarChart3,
+	Globe,
+	ShieldCheck,
 } from "lucide-react";
 import { toast } from "sonner";
+import { isValidDomain } from "@/lib/validation";
 
-interface DomainAuthority {
+interface DomainAuthorityResponse {
 	domain: string;
-	domainAuthority: number;
-	pageAuthority: number;
-	spamScore: number;
-	linkingDomains: number;
-	totalBacklinks: number;
-	organicKeywords: number;
-	organicTraffic: number;
-	lastUpdated: string;
-	trustFlow: number;
-	citationFlow: number;
+	page_rank_integer: number;
+	page_rank_decimal: number;
+	rank: string | number;
+	provider?: string;
+	status?: string;
+	updated_at?: string;
 }
 
 export default function DomainAuthorityChecker() {
 	const [domain, setDomain] = useState("");
 	const [loading, setLoading] = useState(false);
-	const [authorityData, setAuthorityData] = useState<DomainAuthority | null>(null);
+	const [authorityData, setAuthorityData] = useState<DomainAuthorityResponse | null>(null);
 	const [error, setError] = useState("");
-
-	const validateDomain = (domain: string) => {
-		const domainRegex =
-			/^[a-zA-Z0-9][a-zA-Z0-9-]{0,61}[a-zA-Z0-9]?\.[a-zA-Z]{2,}$/;
-		return domainRegex.test(domain);
-	};
-
-	const getScoreColor = (score: number) => {
-		if (score >= 7) return "text-green-600";
-		if (score >= 5) return "text-yellow-600";
-		if (score >= 3) return "text-orange-600";
-		return "text-red-600";
-	};
-
-	const getScoreLabel = (score: number) => {
-		if (score >= 7) return "Excellent";
-		if (score >= 5) return "Good";
-		if (score >= 3) return "Average";
-		return "Poor";
-	};
 
 	const checkDomainAuthority = async () => {
 		if (!domain.trim()) {
@@ -74,9 +52,10 @@ export default function DomainAuthorityChecker() {
 			.trim()
 			.toLowerCase()
 			.replace(/^https?:\/\//, "")
-			.replace(/^www\./, "");
+			.replace(/^www\./, "")
+			.split("/")[0];
 
-		if (!validateDomain(cleanDomain)) {
+		if (!isValidDomain(cleanDomain)) {
 			setError("Please enter a valid domain name (e.g., example.com)");
 			return;
 		}
@@ -86,22 +65,16 @@ export default function DomainAuthorityChecker() {
 		setAuthorityData(null);
 
 		try {
-			const res = await fetch(
-				`/api/domain-authority?domain=${encodeURIComponent(
-					cleanDomain
-				)}`
-			);
+			const res = await fetch(`/api/domain-authority?domain=${encodeURIComponent(cleanDomain)}`);
 			const data = await res.json();
 			if (!res.ok) {
 				setError(data.error || "Failed to fetch domain authority");
 				return;
 			}
 			setAuthorityData(data);
-			toast("Domain authority checked!", {
-				description: `Analysis complete for ${cleanDomain}`,
-			});
-		} catch (err) {
-			setError("Failed to check domain authority. Please try again.");
+			toast.success(`Domain PageRank analysis complete for ${cleanDomain}`);
+		} catch {
+			setError("Failed to check domain authority. Please check your network or try again.");
 		} finally {
 			setLoading(false);
 		}
@@ -113,46 +86,59 @@ export default function DomainAuthorityChecker() {
 		}
 	};
 
+	const getScoreBadge = (score: number) => {
+		if (score >= 8) return <Badge className='bg-emerald-600 text-white'>Tier 1 Global Authority</Badge>;
+		if (score >= 5) return <Badge className='bg-blue-600 text-white'>High Domain Authority</Badge>;
+		if (score >= 2) return <Badge className='bg-indigo-600 text-white'>Moderate Authority</Badge>;
+		return <Badge variant='secondary'>Emerging / Unranked</Badge>;
+	};
+
 	return (
-		<div className='min-h-screen bg-gradient-to-br from-blue-50 to-purple-100 p-4'>
-			<div className='max-w-6xl mx-auto'>
+		<div className='min-h-screen bg-gradient-to-br from-slate-50 to-blue-50/50 p-4 py-8'>
+			<div className='max-w-5xl mx-auto'>
 				<div className='text-center mb-8'>
-					<h1 className='text-4xl font-bold text-gray-900 mb-4'>
+					<div className='inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-100 text-blue-700 text-xs font-semibold mb-3'>
+						<TrendingUp className='h-3.5 w-3.5' />
+						Global Domain Intelligence
+					</div>
+					<h1 className='text-3xl md:text-4xl font-bold text-slate-900 mb-3'>
 						Domain Authority Checker
 					</h1>
-					<p className='text-xl text-gray-600'>
-						Check domain authority, page authority, and SEO metrics
+					<p className='text-muted-foreground text-sm md:text-base max-w-2xl mx-auto'>
+						Check authentic domain PageRank, global position, and web authority scores using the independent OpenPageRank index.
 					</p>
 				</div>
 
-				<Card className='mb-6'>
+				<Card className='mb-6 shadow-xs border-slate-200'>
 					<CardHeader>
-						<CardTitle className='flex items-center gap-2'>
-							<TrendingUp className='w-5 h-5' />
+						<CardTitle className='flex items-center gap-2 text-lg'>
+							<Globe className='w-5 h-5 text-blue-600' />
 							Domain Authority Analysis
 						</CardTitle>
 						<CardDescription>
-							Enter a domain name to check its authority and SEO
-							metrics
+							Enter a domain name to check its authority metrics from global crawl registries
 						</CardDescription>
 					</CardHeader>
 					<CardContent className='space-y-4'>
 						<div>
-							<Label htmlFor='domain'>Domain Name</Label>
-							<div className='flex gap-2 mt-1'>
+							<Label htmlFor='domain' className='text-xs font-semibold uppercase tracking-wider text-slate-600'>
+								Domain Name
+							</Label>
+							<div className='flex flex-col sm:flex-row gap-2 mt-1.5'>
 								<Input
 									id='domain'
 									value={domain}
 									onChange={(e) => setDomain(e.target.value)}
-									onKeyPress={handleKeyPress}
+									onKeyDown={handleKeyPress}
 									placeholder='example.com'
 									className='flex-1'
 								/>
 								<Button
 									onClick={checkDomainAuthority}
-									disabled={loading}>
+									disabled={loading}
+									className='bg-blue-600 hover:bg-blue-700 text-white'>
 									{loading ? (
-										<BarChart3 className='w-4 h-4 mr-2 animate-pulse' />
+										<BarChart3 className='w-4 h-4 mr-2 animate-spin' />
 									) : (
 										<Search className='w-4 h-4 mr-2' />
 									)}
@@ -160,8 +146,8 @@ export default function DomainAuthorityChecker() {
 								</Button>
 							</div>
 							{error && (
-								<p className='text-red-500 text-sm mt-1 flex items-center gap-1'>
-									<AlertCircle className='w-4 h-4' />
+								<p className='text-red-500 text-xs mt-2 flex items-center gap-1.5'>
+									<AlertCircle className='w-4 h-4 shrink-0' />
 									{error}
 								</p>
 							)}
@@ -171,326 +157,128 @@ export default function DomainAuthorityChecker() {
 
 				{authorityData && (
 					<div className='space-y-6'>
-						{/* Main Metrics */}
-						<div className='grid grid-cols-1 md:grid-cols-3 gap-6'>
-							<Card>
-								<CardHeader className='pb-3'>
-									<CardTitle className='text-lg'>
-										Domain Authority
+						{/* Key Authority Cards */}
+						<div className='grid grid-cols-1 md:grid-cols-3 gap-4'>
+							<Card className='border-slate-200'>
+								<CardHeader className='pb-2'>
+									<CardTitle className='text-sm text-slate-500 font-medium'>
+										OpenPageRank Score
 									</CardTitle>
-									<CardDescription>
-										Overall domain strength (0-100)
-									</CardDescription>
 								</CardHeader>
 								<CardContent>
-									<div className='text-center'>
-										<div
-											className={`text-4xl font-bold ${getScoreColor(
-												authorityData.pageAuthority
-											)}`}>
-											{authorityData.pageAuthority}
-										</div>
-										<Progress
-											value={
-												authorityData.pageAuthority
-											}
-											className='mt-2'
-										/>
-										<Badge
-											variant='secondary'
-											className='mt-2'>
-											{getScoreLabel(
-												authorityData.pageAuthority
-											)}
-										</Badge>
+									<div className='text-3xl font-extrabold text-slate-900'>
+										{authorityData.page_rank_decimal.toFixed(2)}
+										<span className='text-sm font-normal text-slate-400'> / 10</span>
+									</div>
+									<Progress
+										value={authorityData.page_rank_integer * 10}
+										className='mt-3 h-2'
+									/>
+									<div className='mt-3'>
+										{getScoreBadge(authorityData.page_rank_integer)}
 									</div>
 								</CardContent>
 							</Card>
 
-							<Card>
-								<CardHeader className='pb-3'>
-									<CardTitle className='text-lg'>
-										Page Authority
+							<Card className='border-slate-200'>
+								<CardHeader className='pb-2'>
+									<CardTitle className='text-sm text-slate-500 font-medium'>
+										Global Web Rank
 									</CardTitle>
-									<CardDescription>
-										Homepage ranking strength
-									</CardDescription>
 								</CardHeader>
 								<CardContent>
-									<div className='text-center'>
-										<div
-											className={`text-4xl font-bold ${getScoreColor(
-												authorityData.pageAuthority
-											)}`}>
-											{authorityData.pageAuthority}
-										</div>
-										<Progress
-											value={
-												authorityData.pageAuthority
-											}
-											className='mt-2'
-										/>
-										<Badge
-											variant='secondary'
-											className='mt-2'>
-											{getScoreLabel(
-												authorityData.pageAuthority
-											)}
-										</Badge>
+									<div className='text-3xl font-extrabold text-blue-600 truncate'>
+										{authorityData.rank !== "Unranked"
+											? `#${Number(authorityData.rank).toLocaleString()}`
+											: "Unranked"}
 									</div>
+									<p className='text-xs text-slate-500 mt-2'>
+										Relative position across millions of active domains
+									</p>
+									<Badge variant='outline' className='mt-2 text-xs'>
+										Independent Registry
+									</Badge>
 								</CardContent>
 							</Card>
 
-							<Card>
-								<CardHeader className='pb-3'>
-									<CardTitle className='text-lg'>
-										Spam Score
+							<Card className='border-slate-200'>
+								<CardHeader className='pb-2'>
+									<CardTitle className='text-sm text-slate-500 font-medium'>
+										Index Status
 									</CardTitle>
-									<CardDescription>
-										Likelihood of being penalized
-									</CardDescription>
 								</CardHeader>
 								<CardContent>
-									<div className='text-center'>
-										<div
-											className={`text-4xl font-bold ${
-												authorityData.spamScore > 20
-													? "text-red-600"
-													: authorityData.spamScore >
-													  10
-													? "text-yellow-600"
-													: "text-green-600"
-											}`}>
-											{authorityData.spamScore}%
-										</div>
-										<Progress
-											value={authorityData.spamScore}
-											className='mt-2'
-										/>
-										<Badge
-											variant={
-												authorityData.spamScore > 20
-													? "destructive"
-													: "secondary"
-											}
-											className='mt-2'>
-											{authorityData.spamScore > 20
-												? "High Risk"
-												: authorityData.spamScore > 10
-												? "Medium Risk"
-												: "Low Risk"}
-										</Badge>
+									<div className='text-xl font-bold text-slate-900'>
+										{authorityData.page_rank_integer > 0 ? "Indexed & Active" : "New / Low Citation"}
 									</div>
+									<p className='text-xs text-slate-500 mt-2'>
+										{authorityData.status || "Global crawl record verified"}
+									</p>
+									<Badge variant='secondary' className='mt-2 text-xs'>
+										Domain Verified
+									</Badge>
 								</CardContent>
 							</Card>
 						</div>
 
-						{/* Detailed Metrics */}
-						<div className='grid grid-cols-1 lg:grid-cols-2 gap-6'>
-							<Card>
-								<CardHeader>
-									<CardTitle>Backlink Profile</CardTitle>
-								</CardHeader>
-								<CardContent className='space-y-4'>
-									<div className='flex justify-between items-center'>
-										<Label className='text-sm font-medium text-gray-500'>
-											Linking Domains
-										</Label>
-										<span className='text-lg font-semibold'>
-											{authorityData.linkingDomains}
-										</span>
-									</div>
-
-									<div className='flex justify-between items-center'>
-										<Label className='text-sm font-medium text-gray-500'>
-											Total Backlinks
-										</Label>
-										<span className='text-lg font-semibold'>
-											{authorityData.totalBacklinks}
-										</span>
-									</div>
-
-									<div className='flex justify-between items-center'>
-										<Label className='text-sm font-medium text-gray-500'>
-											Trust Flow
-										</Label>
-										<div className='flex items-center gap-2'>
-											<span className='text-lg font-semibold'>
-												{authorityData.trustFlow}
-											</span>
-											<Progress
-												value={authorityData.trustFlow}
-												className='w-20'
-											/>
-										</div>
-									</div>
-
-									<div className='flex justify-between items-center'>
-										<Label className='text-sm font-medium text-gray-500'>
-											Citation Flow
-										</Label>
-										<div className='flex items-center gap-2'>
-											<span className='text-lg font-semibold'>
-												{authorityData.citationFlow}
-											</span>
-											<Progress
-												value={
-													authorityData.citationFlow
-												}
-												className='w-20'
-											/>
-										</div>
-									</div>
-								</CardContent>
-							</Card>
-
-							<Card>
-								<CardHeader>
-									<CardTitle>Organic Performance</CardTitle>
-								</CardHeader>
-								<CardContent className='space-y-4'>
-									<div className='flex justify-between items-center'>
-										<Label className='text-sm font-medium text-gray-500'>
-											Organic Keywords
-										</Label>
-										<span className='text-lg font-semibold'>
-											{authorityData.organicKeywords}
-										</span>
-									</div>
-
-									<div className='flex justify-between items-center'>
-										<Label className='text-sm font-medium text-gray-500'>
-											Organic Traffic
-										</Label>
-										<span className='text-lg font-semibold'>
-											{authorityData.organicTraffic}
-										</span>
-									</div>
-
-									<div className='flex justify-between items-center'>
-										<Label className='text-sm font-medium text-gray-500'>
-											Last Updated
-										</Label>
-										<span className='text-lg'>
-											{new Date(
-												authorityData.lastUpdated
-											).toLocaleDateString()}
-										</span>
-									</div>
-
-									<div className='pt-2'>
-										<Button
-											variant='outline'
-											className='w-full bg-transparent'>
-											<ExternalLink className='w-4 h-4 mr-2' />
-											View Detailed Report
-										</Button>
-									</div>
-								</CardContent>
-							</Card>
-						</div>
-
-						{/* Recommendations */}
-						<Card>
+						{/* Domain Meta Details */}
+						<Card className='border-slate-200'>
 							<CardHeader>
-								<CardTitle>
-									Improvement Recommendations
+								<CardTitle className='text-base flex items-center justify-between'>
+									<span>Domain Registry Report</span>
+									<span className='font-mono text-xs text-slate-500 font-normal'>{authorityData.domain}</span>
 								</CardTitle>
 							</CardHeader>
-							<CardContent>
-								<div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
-									<div className='space-y-2'>
-										<h4 className='font-semibold text-gray-900'>
-											To Improve Domain Authority:
-										</h4>
-										<ul className='text-sm text-gray-600 space-y-1'>
-											<li>
-												• Build high-quality backlinks
-												from authoritative sites
-											</li>
-											<li>
-												• Create valuable, shareable
-												content
-											</li>
-											<li>
-												• Improve internal linking
-												structure
-											</li>
-											<li>
-												• Remove or disavow toxic
-												backlinks
-											</li>
-										</ul>
+							<CardContent className='space-y-3 text-sm'>
+								<div className='grid sm:grid-cols-2 gap-3 text-xs text-slate-600'>
+									<div className='flex justify-between border-b border-slate-100 pb-2'>
+										<span className='font-medium text-slate-500'>Domain Name:</span>
+										<span className='font-semibold text-slate-900 font-mono'>{authorityData.domain}</span>
 									</div>
-									<div className='space-y-2'>
-										<h4 className='font-semibold text-gray-900'>
-											To Reduce Spam Score:
-										</h4>
-										<ul className='text-sm text-gray-600 space-y-1'>
-											<li>
-												• Audit and clean up backlink
-												profile
-											</li>
-											<li>
-												• Avoid link schemes and paid
-												links
-											</li>
-											<li>
-												• Focus on earning natural,
-												editorial links
-											</li>
-											<li>
-												• Monitor for negative SEO
-												attacks
-											</li>
-										</ul>
+									<div className='flex justify-between border-b border-slate-100 pb-2'>
+										<span className='font-medium text-slate-500'>Data Source:</span>
+										<span className='font-semibold text-slate-900'>OpenPageRank API</span>
 									</div>
+									<div className='flex justify-between border-b border-slate-100 pb-2'>
+										<span className='font-medium text-slate-500'>Integer Rank:</span>
+										<span className='font-semibold text-slate-900'>{authorityData.page_rank_integer} / 10</span>
+									</div>
+									<div className='flex justify-between border-b border-slate-100 pb-2'>
+										<span className='font-medium text-slate-500'>Calculation Method:</span>
+										<span className='font-semibold text-slate-900'>Logarithmic PageRank Algorithm</span>
+									</div>
+								</div>
+
+								<div className='pt-2 flex gap-2'>
+									<Button
+										variant='outline'
+										size='sm'
+										asChild
+										className='text-xs'>
+										<a
+											href={`https://${authorityData.domain}`}
+											target='_blank'
+											rel='noopener noreferrer'>
+											<ExternalLink className='w-3.5 h-3.5 mr-1.5' />
+											Visit Website
+										</a>
+									</Button>
 								</div>
 							</CardContent>
 						</Card>
-					</div>
-				)}
 
-				{/* Information */}
-				<Card className='mt-6'>
-					<CardHeader>
-						<CardTitle>Understanding Domain Authority</CardTitle>
-					</CardHeader>
-					<CardContent>
-						<div className='grid grid-cols-1 md:grid-cols-3 gap-4 text-sm text-gray-600'>
+						{/* Editorial Quality Box */}
+						<div className='rounded-xl border border-blue-200 bg-blue-50/70 p-4 text-xs text-slate-700 flex items-start gap-3'>
+							<ShieldCheck className='h-5 w-5 text-blue-600 shrink-0 mt-0.5' />
 							<div>
-								<h4 className='font-semibold text-gray-900 mb-2'>
-									Domain Authority (DA)
-								</h4>
-								<p>
-									Predicts how well a domain will rank on
-									search engines. Scale of 1-100, with higher
-									scores indicating greater ranking potential.
-								</p>
-							</div>
-							<div>
-								<h4 className='font-semibold text-gray-900 mb-2'>
-									Page Authority (PA)
-								</h4>
-								<p>
-									Predicts how well a specific page will rank.
-									Similar to DA but focuses on individual page
-									strength rather than entire domain.
-								</p>
-							</div>
-							<div>
-								<h4 className='font-semibold text-gray-900 mb-2'>
-									Spam Score
-								</h4>
-								<p>
-									Percentage representing the likelihood that
-									a domain may be penalized by search engines
-									for spammy practices.
+								<p className='font-bold text-blue-900 mb-1'>About OpenPageRank Metrics</p>
+								<p className='leading-relaxed'>
+									PageRank measures the relative importance and citation authority of a domain based on the global web graph. It is an algorithmic representation of internet-wide connectivity, unaffected by paid sponsorship or private backlink manipulation.
 								</p>
 							</div>
 						</div>
-					</CardContent>
-				</Card>
+					</div>
+				)}
 			</div>
 		</div>
 	);

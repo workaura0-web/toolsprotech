@@ -116,13 +116,6 @@ export default function ToolGuide() {
 			priceCurrency: "USD",
 			availability: "https://schema.org/InStock",
 		},
-		aggregateRating: {
-			"@type": "AggregateRating",
-			ratingValue: "4.9",
-			ratingCount: "148",
-			bestRating: "5",
-			worstRating: "1",
-		},
 		publisher: {
 			"@type": "Organization",
 			name: SITE_NAME,

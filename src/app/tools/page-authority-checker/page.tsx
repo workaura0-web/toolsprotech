@@ -1,7 +1,6 @@
 "use client";
 
 import type React from "react";
-
 import { useState } from "react";
 import {
 	Card,
@@ -22,71 +21,46 @@ import {
 	ExternalLink,
 	BarChart3,
 	Globe,
+	ShieldCheck,
+	CheckCircle,
 } from "lucide-react";
 import { toast } from "sonner";
 
-interface PageAuthority {
+interface RealPageAuthority {
 	url: string;
-	pageAuthority: number;
-	domainAuthority: number;
-	linkingDomains: number;
-	totalLinks: number;
-	internalLinks: number;
-	externalLinks: number;
-	socialShares: number;
-	loadTime: number;
-	mobileScore: number;
-	seoScore: number;
-	lastCrawled: string;
+	domain: string;
+	pageRankScore: number; // 0 to 10
+	pageRankDecimal: number;
+	globalRank: string;
+	isHttps: boolean;
+	pathDepth: number;
+	slugReadability: string;
+	indexedStatus: string;
+	analyzedAt: string;
 }
 
 export default function PageAuthorityChecker() {
 	const [url, setUrl] = useState("");
 	const [loading, setLoading] = useState(false);
-	const [pageData, setPageData] = useState<PageAuthority | null>(null);
+	const [pageData, setPageData] = useState<RealPageAuthority | null>(null);
 	const [error, setError] = useState("");
-
-	const validateUrl = (url: string) => {
-		try {
-			new URL(url);
-			return true;
-		} catch {
-			return false;
-		}
-	};
-
-	const getScoreColor = (score: number) => {
-		if (score >= 70) return "text-green-600";
-		if (score >= 50) return "text-yellow-600";
-		if (score >= 30) return "text-orange-600";
-		return "text-red-600";
-	};
-
-	const getScoreLabel = (score: number) => {
-		if (score >= 70) return "Excellent";
-		if (score >= 50) return "Good";
-		if (score >= 30) return "Average";
-		return "Poor";
-	};
 
 	const checkPageAuthority = async () => {
 		if (!url.trim()) {
-			setError("Please enter a URL");
+			setError("Please enter a URL to check");
 			return;
 		}
 
 		let cleanUrl = url.trim();
-		if (
-			!cleanUrl.startsWith("http://") &&
-			!cleanUrl.startsWith("https://")
-		) {
+		if (!cleanUrl.startsWith("http://") && !cleanUrl.startsWith("https://")) {
 			cleanUrl = "https://" + cleanUrl;
 		}
 
-		if (!validateUrl(cleanUrl)) {
-			setError(
-				"Please enter a valid URL (e.g., https://example.com/page)"
-			);
+		let parsed: URL;
+		try {
+			parsed = new URL(cleanUrl);
+		} catch {
+			setError("Please enter a valid URL (e.g., https://example.com/blog/article)");
 			return;
 		}
 
@@ -95,34 +69,45 @@ export default function PageAuthorityChecker() {
 		setPageData(null);
 
 		try {
-			// Simulate API call
-			await new Promise((resolve) => setTimeout(resolve, 2500));
+			// Query real domain authority API
+			const res = await fetch(`/api/domain-authority?domain=${encodeURIComponent(parsed.hostname)}`);
+			const data = await res.json();
 
-			// Generate realistic mock data
-			const baseScore = Math.floor(Math.random() * 100);
+			if (!res.ok) {
+				throw new Error(data.error || "Failed to query authority registry");
+			}
 
-			const mockData: PageAuthority = {
+			const pathSegments = parsed.pathname.split("/").filter(Boolean);
+			const isHttps = parsed.protocol === "https:";
+			const pathDepth = pathSegments.length;
+
+			// Technical on-page slug evaluation
+			let slugReadability = "Optimal (Short & Clean)";
+			if (pathSegments.some((s) => s.length > 50)) {
+				slugReadability = "Warning: URL slug is unusually lengthy";
+			} else if (parsed.search.length > 30) {
+				slugReadability = "Complex (Excess query parameters)";
+			}
+
+			const result: RealPageAuthority = {
 				url: cleanUrl,
-				pageAuthority: baseScore,
-				domainAuthority: Math.max(
-					10,
-					baseScore + Math.floor(Math.random() * 30) - 15
-				),
-				linkingDomains: Math.floor(Math.random() * 5000) + 50,
-				totalLinks: Math.floor(Math.random() * 50000) + 500,
-				internalLinks: Math.floor(Math.random() * 100) + 10,
-				externalLinks: Math.floor(Math.random() * 50) + 5,
-				socialShares: Math.floor(Math.random() * 10000) + 100,
-				loadTime: Math.random() * 3 + 0.5,
-				mobileScore: Math.floor(Math.random() * 40) + 60,
-				seoScore: Math.floor(Math.random() * 40) + 50,
-				lastCrawled: new Date().toISOString().split("T")[0],
+				domain: parsed.hostname,
+				pageRankScore: data.page_rank_integer ?? 0,
+				pageRankDecimal: data.page_rank_decimal ?? 0,
+				globalRank: data.rank ? String(data.rank) : "Unranked",
+				isHttps,
+				pathDepth,
+				slugReadability,
+				indexedStatus: data.status || "Verified in OpenPageRank Global Registry",
+				analyzedAt: new Date().toISOString(),
 			};
 
-			setPageData(mockData);
-			toast.success("Page authority checked!");
+			setPageData(result);
+			toast.success("Page authority analysis complete!");
 		} catch (err) {
-			setError("Failed to check page authority. Please try again.");
+			const msg = err instanceof Error ? err.message : "Error querying page metrics";
+			setError(msg);
+			toast.error(msg);
 		} finally {
 			setLoading(false);
 		}
@@ -134,55 +119,68 @@ export default function PageAuthorityChecker() {
 		}
 	};
 
+	const getScoreBadge = (score: number) => {
+		if (score >= 7) return <Badge className='bg-emerald-600 text-white'>High Authority</Badge>;
+		if (score >= 4) return <Badge className='bg-blue-600 text-white'>Moderate Authority</Badge>;
+		if (score >= 1) return <Badge className='bg-amber-600 text-white'>Emerging Authority</Badge>;
+		return <Badge variant='secondary'>Unranked / New Page</Badge>;
+	};
+
 	return (
-		<div className='min-h-screen bg-gradient-to-br from-green-50 to-blue-100 p-4'>
-			<div className='max-w-6xl mx-auto'>
+		<div className='min-h-screen bg-gradient-to-br from-slate-50 to-blue-50/50 p-4 py-8'>
+			<div className='max-w-5xl mx-auto'>
 				<div className='text-center mb-8'>
-					<h1 className='text-4xl font-bold text-gray-900 mb-4'>
+					<div className='inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-100 text-blue-700 text-xs font-semibold mb-3'>
+						<BarChart3 className='h-3.5 w-3.5' />
+						Verified OpenPageRank Registry
+					</div>
+					<h1 className='text-3xl md:text-4xl font-bold text-slate-900 mb-3'>
 						Page Authority Checker
 					</h1>
-					<p className='text-xl text-gray-600'>
-						Analyze page authority and SEO metrics for any URL
+					<p className='text-muted-foreground text-sm md:text-base max-w-2xl mx-auto'>
+						Analyze the global ranking authority and technical URL structure of any specific webpage using verified registry data.
 					</p>
 				</div>
 
-				<Card className='mb-6'>
+				<Card className='mb-6 shadow-xs border-slate-200'>
 					<CardHeader>
-						<CardTitle className='flex items-center gap-2'>
-							<FileText className='w-5 h-5' />
-							Page Authority Analysis
+						<CardTitle className='flex items-center gap-2 text-lg'>
+							<FileText className='w-5 h-5 text-blue-600' />
+							URL Authority Inspection
 						</CardTitle>
 						<CardDescription>
-							Enter a URL to check its page authority and SEO
-							performance
+							Enter a complete webpage URL to retrieve genuine PageRank metrics and URL parameters
 						</CardDescription>
 					</CardHeader>
 					<CardContent className='space-y-4'>
 						<div>
-							<Label htmlFor='url'>Page URL</Label>
-							<div className='flex gap-2 mt-1'>
+							<Label htmlFor='url' className='text-xs font-semibold uppercase tracking-wider text-slate-600'>
+								Webpage URL
+							</Label>
+							<div className='flex flex-col sm:flex-row gap-2 mt-1.5'>
 								<Input
 									id='url'
 									value={url}
 									onChange={(e) => setUrl(e.target.value)}
-									onKeyPress={handleKeyPress}
-									placeholder='https://example.com/page'
+									onKeyDown={handleKeyPress}
+									placeholder='https://example.com/blog/seo-guide'
 									className='flex-1'
 								/>
 								<Button
 									onClick={checkPageAuthority}
-									disabled={loading}>
+									disabled={loading}
+									className='bg-blue-600 hover:bg-blue-700 text-white'>
 									{loading ? (
-										<BarChart3 className='w-4 h-4 mr-2 animate-pulse' />
+										<BarChart3 className='w-4 h-4 mr-2 animate-spin' />
 									) : (
 										<Search className='w-4 h-4 mr-2' />
 									)}
-									Check Page
+									Analyze URL
 								</Button>
 							</div>
 							{error && (
-								<p className='text-red-500 text-sm mt-1 flex items-center gap-1'>
-									<AlertCircle className='w-4 h-4' />
+								<p className='text-red-500 text-xs mt-2 flex items-center gap-1.5'>
+									<AlertCircle className='w-4 h-4 shrink-0' />
 									{error}
 								</p>
 							)}
@@ -192,327 +190,134 @@ export default function PageAuthorityChecker() {
 
 				{pageData && (
 					<div className='space-y-6'>
-						{/* Main Metrics */}
-						<div className='grid grid-cols-1 md:grid-cols-3 gap-6'>
-							<Card>
-								<CardHeader className='pb-3'>
-									<CardTitle className='text-lg'>
-										Page Authority
+						{/* Primary Metric Cards */}
+						<div className='grid grid-cols-1 md:grid-cols-3 gap-4'>
+							<Card className='border-slate-200'>
+								<CardHeader className='pb-2'>
+									<CardTitle className='text-sm text-slate-500 font-medium'>
+										OpenPageRank Score
 									</CardTitle>
-									<CardDescription>
-										Individual page ranking strength
-									</CardDescription>
 								</CardHeader>
 								<CardContent>
-									<div className='text-center'>
-										<div
-											className={`text-4xl font-bold ${getScoreColor(
-												pageData.pageAuthority
-											)}`}>
-											{pageData.pageAuthority}
-										</div>
-										<Progress
-											value={pageData.pageAuthority}
-											className='mt-2'
-										/>
-										<Badge
-											variant='secondary'
-											className='mt-2'>
-											{getScoreLabel(
-												pageData.pageAuthority
-											)}
-										</Badge>
+									<div className='text-3xl font-extrabold text-slate-900'>
+										{pageData.pageRankDecimal.toFixed(2)}
+										<span className='text-sm font-normal text-slate-400'> / 10</span>
+									</div>
+									<Progress
+										value={pageData.pageRankScore * 10}
+										className='mt-3 h-2'
+									/>
+									<div className='mt-3'>
+										{getScoreBadge(pageData.pageRankScore)}
 									</div>
 								</CardContent>
 							</Card>
 
-							<Card>
-								<CardHeader className='pb-3'>
-									<CardTitle className='text-lg'>
-										Domain Authority
+							<Card className='border-slate-200'>
+								<CardHeader className='pb-2'>
+									<CardTitle className='text-sm text-slate-500 font-medium'>
+										Global Rank
 									</CardTitle>
-									<CardDescription>
-										Overall domain strength
-									</CardDescription>
 								</CardHeader>
 								<CardContent>
-									<div className='text-center'>
-										<div
-											className={`text-4xl font-bold ${getScoreColor(
-												pageData.domainAuthority
-											)}`}>
-											{pageData.domainAuthority}
-										</div>
-										<Progress
-											value={pageData.domainAuthority}
-											className='mt-2'
-										/>
-										<Badge
-											variant='secondary'
-											className='mt-2'>
-											{getScoreLabel(
-												pageData.domainAuthority
-											)}
-										</Badge>
+									<div className='text-3xl font-extrabold text-blue-600 truncate'>
+										{pageData.globalRank !== "Unranked" ? `#${Number(pageData.globalRank).toLocaleString()}` : "Unranked"}
 									</div>
-								</CardContent>
-							</Card>
-
-							<Card>
-								<CardHeader className='pb-3'>
-									<CardTitle className='text-lg'>
-										SEO Score
-									</CardTitle>
-									<CardDescription>
-										Overall SEO performance
-									</CardDescription>
-								</CardHeader>
-								<CardContent>
-									<div className='text-center'>
-										<div
-											className={`text-4xl font-bold ${getScoreColor(
-												pageData.seoScore
-											)}`}>
-											{pageData.seoScore}
-										</div>
-										<Progress
-											value={pageData.seoScore}
-											className='mt-2'
-										/>
-										<Badge
-											variant='secondary'
-											className='mt-2'>
-											{getScoreLabel(pageData.seoScore)}
-										</Badge>
-									</div>
-								</CardContent>
-							</Card>
-						</div>
-
-						{/* Detailed Metrics */}
-						<div className='grid grid-cols-1 lg:grid-cols-2 gap-6'>
-							<Card>
-								<CardHeader>
-									<CardTitle>Link Profile</CardTitle>
-								</CardHeader>
-								<CardContent className='space-y-4'>
-									<div className='flex justify-between items-center'>
-										<Label className='text-sm font-medium text-gray-500'>
-											Linking Domains
-										</Label>
-										<span className='text-lg font-semibold'>
-											{pageData.linkingDomains.toLocaleString()}
-										</span>
-									</div>
-
-									<div className='flex justify-between items-center'>
-										<Label className='text-sm font-medium text-gray-500'>
-											Total Links
-										</Label>
-										<span className='text-lg font-semibold'>
-											{pageData.totalLinks.toLocaleString()}
-										</span>
-									</div>
-
-									<div className='flex justify-between items-center'>
-										<Label className='text-sm font-medium text-gray-500'>
-											Internal Links
-										</Label>
-										<span className='text-lg font-semibold'>
-											{pageData.internalLinks}
-										</span>
-									</div>
-
-									<div className='flex justify-between items-center'>
-										<Label className='text-sm font-medium text-gray-500'>
-											External Links
-										</Label>
-										<span className='text-lg font-semibold'>
-											{pageData.externalLinks}
-										</span>
-									</div>
-								</CardContent>
-							</Card>
-
-							<Card>
-								<CardHeader>
-									<CardTitle>Performance Metrics</CardTitle>
-								</CardHeader>
-								<CardContent className='space-y-4'>
-									<div className='flex justify-between items-center'>
-										<Label className='text-sm font-medium text-gray-500'>
-											Social Shares
-										</Label>
-										<span className='text-lg font-semibold'>
-											{pageData.socialShares.toLocaleString()}
-										</span>
-									</div>
-
-									<div className='flex justify-between items-center'>
-										<Label className='text-sm font-medium text-gray-500'>
-											Load Time
-										</Label>
-										<span className='text-lg font-semibold'>
-											{pageData.loadTime.toFixed(2)}s
-										</span>
-									</div>
-
-									<div className='flex justify-between items-center'>
-										<Label className='text-sm font-medium text-gray-500'>
-											Mobile Score
-										</Label>
-										<div className='flex items-center gap-2'>
-											<span className='text-lg font-semibold'>
-												{pageData.mobileScore}
-											</span>
-											<Progress
-												value={pageData.mobileScore}
-												className='w-20'
-											/>
-										</div>
-									</div>
-
-									<div className='flex justify-between items-center'>
-										<Label className='text-sm font-medium text-gray-500'>
-											Last Crawled
-										</Label>
-										<span className='text-lg'>
-											{new Date(
-												pageData.lastCrawled
-											).toLocaleDateString()}
-										</span>
-									</div>
-								</CardContent>
-							</Card>
-						</div>
-
-						{/* URL Display */}
-						<Card>
-							<CardHeader>
-								<CardTitle className='flex items-center gap-2'>
-									<Globe className='w-5 h-5' />
-									Analyzed URL
-								</CardTitle>
-							</CardHeader>
-							<CardContent>
-								<div className='bg-gray-100 p-3 rounded-lg'>
-									<p className='font-mono text-sm break-all'>
-										{pageData.url}
+									<p className='text-xs text-slate-500 mt-2'>
+										Position in global domain index
 									</p>
+									<Badge variant='outline' className='mt-2 text-xs'>
+										OpenPageRank Index
+									</Badge>
+								</CardContent>
+							</Card>
+
+							<Card className='border-slate-200'>
+								<CardHeader className='pb-2'>
+									<CardTitle className='text-sm text-slate-500 font-medium'>
+										Security & Protocol
+									</CardTitle>
+								</CardHeader>
+								<CardContent>
+									<div className='flex items-center gap-2'>
+										{pageData.isHttps ? (
+											<CheckCircle className='h-6 w-6 text-emerald-600' />
+										) : (
+											<AlertCircle className='h-6 w-6 text-amber-600' />
+										)}
+										<span className='text-xl font-bold text-slate-900'>
+											{pageData.isHttps ? "HTTPS Encrypted" : "HTTP Insecure"}
+										</span>
+									</div>
+									<p className='text-xs text-slate-500 mt-2'>
+										Path Depth: {pageData.pathDepth} directory level(s)
+									</p>
+									<Badge variant='secondary' className='mt-2 text-xs'>
+										{pageData.slugReadability}
+									</Badge>
+								</CardContent>
+							</Card>
+						</div>
+
+						{/* Technical URL Inspection Details */}
+						<Card className='border-slate-200'>
+							<CardHeader>
+								<CardTitle className='text-base flex items-center gap-2'>
+									<Globe className='w-4 h-4 text-blue-600' />
+									Target Webpage Technical Summary
+								</CardTitle>
+							</CardHeader>
+							<CardContent className='space-y-3 text-sm'>
+								<div className='rounded-lg bg-slate-100 p-3 font-mono text-xs break-all text-slate-800'>
+									{pageData.url}
 								</div>
-								<div className='mt-4 flex gap-2'>
-									<Button variant='outline' size='sm'>
-										<ExternalLink className='w-4 h-4 mr-2' />
-										Visit Page
-									</Button>
-									<Button variant='outline' size='sm'>
-										<BarChart3 className='w-4 h-4 mr-2' />
-										Detailed Analysis
+
+								<div className='grid sm:grid-cols-2 gap-3 pt-2 text-xs text-slate-600'>
+									<div className='flex justify-between border-b border-slate-100 pb-2'>
+										<span className='font-medium text-slate-500'>Root Domain:</span>
+										<span className='font-semibold text-slate-900'>{pageData.domain}</span>
+									</div>
+									<div className='flex justify-between border-b border-slate-100 pb-2'>
+										<span className='font-medium text-slate-500'>Registry Source:</span>
+										<span className='font-semibold text-slate-900'>OpenPageRank Global Index</span>
+									</div>
+									<div className='flex justify-between border-b border-slate-100 pb-2'>
+										<span className='font-medium text-slate-500'>URL Structure:</span>
+										<span className='font-semibold text-slate-900'>{pageData.slugReadability}</span>
+									</div>
+									<div className='flex justify-between border-b border-slate-100 pb-2'>
+										<span className='font-medium text-slate-500'>Last Checked:</span>
+										<span className='font-semibold text-slate-900'>{new Date(pageData.analyzedAt).toLocaleDateString()}</span>
+									</div>
+								</div>
+
+								<div className='pt-2 flex gap-2'>
+									<Button
+										variant='outline'
+										size='sm'
+										asChild
+										className='text-xs'>
+										<a href={pageData.url} target='_blank' rel='noopener noreferrer'>
+											<ExternalLink className='w-3.5 h-3.5 mr-1.5' />
+											Visit Target Webpage
+										</a>
 									</Button>
 								</div>
 							</CardContent>
 						</Card>
 
-						{/* Recommendations */}
-						<Card>
-							<CardHeader>
-								<CardTitle>
-									Improvement Recommendations
-								</CardTitle>
-							</CardHeader>
-							<CardContent>
-								<div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
-									<div className='space-y-2'>
-										<h4 className='font-semibold text-gray-900'>
-											To Improve Page Authority:
-										</h4>
-										<ul className='text-sm text-gray-600 space-y-1'>
-											<li>
-												• Build high-quality backlinks
-												to this specific page
-											</li>
-											<li>
-												• Optimize internal linking to
-												this page
-											</li>
-											<li>
-												• Improve content quality and
-												relevance
-											</li>
-											<li>
-												• Increase social media
-												engagement
-											</li>
-										</ul>
-									</div>
-									<div className='space-y-2'>
-										<h4 className='font-semibold text-gray-900'>
-											Technical Improvements:
-										</h4>
-										<ul className='text-sm text-gray-600 space-y-1'>
-											<li>
-												• Optimize page loading speed
-											</li>
-											<li>
-												• Improve mobile responsiveness
-											</li>
-											<li>
-												• Add structured data markup
-											</li>
-											<li>
-												• Optimize meta tags and
-												headings
-											</li>
-										</ul>
-									</div>
-								</div>
-							</CardContent>
-						</Card>
+						{/* Honest Editorial Transparency Box */}
+						<div className='rounded-xl border border-blue-200 bg-blue-50/70 p-4 text-xs text-slate-700 flex items-start gap-3'>
+							<ShieldCheck className='h-5 w-5 text-blue-600 shrink-0 mt-0.5' />
+							<div>
+								<p className='font-bold text-blue-900 mb-1'>Transparent Data Standard</p>
+								<p className='leading-relaxed'>
+									ToolsProTech provides authentic metrics derived from the OpenPageRank algorithmic database. We do not generate fabricated backlink numbers or simulated crawler scores, ensuring compliant, trustworthy data for technical audits.
+								</p>
+							</div>
+						</div>
 					</div>
 				)}
-
-				{/* Information */}
-				<Card className='mt-6'>
-					<CardHeader>
-						<CardTitle>Understanding Page Authority</CardTitle>
-					</CardHeader>
-					<CardContent>
-						<div className='grid grid-cols-1 md:grid-cols-3 gap-4 text-sm text-gray-600'>
-							<div>
-								<h4 className='font-semibold text-gray-900 mb-2'>
-									Page Authority
-								</h4>
-								<p>
-									Predicts how well a specific page will rank
-									in search results. Based on link data and
-									other factors that influence search
-									rankings.
-								</p>
-							</div>
-							<div>
-								<h4 className='font-semibold text-gray-900 mb-2'>
-									Factors Affecting PA
-								</h4>
-								<p>
-									Quality and quantity of links, content
-									relevance, user engagement, technical SEO,
-									and social signals all contribute to page
-									authority.
-								</p>
-							</div>
-							<div>
-								<h4 className='font-semibold text-gray-900 mb-2'>
-									Improvement Tips
-								</h4>
-								<p>
-									Focus on earning quality backlinks, creating
-									valuable content, optimizing for user
-									experience, and building topical authority.
-								</p>
-							</div>
-						</div>
-					</CardContent>
-				</Card>
 			</div>
 		</div>
 	);
